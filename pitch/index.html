@@ -75,11 +75,17 @@ h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-
 .c-jordan svg path { fill: var(--jordan); } .c-jordan b { background: var(--jordan); }
 .c-sam svg path { fill: var(--sam); } .c-sam b { background: var(--sam); }
 .c-priya svg path { fill: var(--priya); } .c-priya b { background: var(--priya); }
+.c-andrew svg path { fill: var(--jordan); } .c-andrew b { background: var(--jordan); }
+.c-iris svg path { fill: var(--sam); } .c-iris b { background: var(--sam); }
+.c-sarah svg path { fill: var(--maya); } .c-sarah b { background: var(--maya); }
+.c-tony svg path { fill: var(--priya); } .c-tony b { background: var(--priya); }
+.c-evelyn svg path { fill: #e0a400; } .c-evelyn b { background: var(--accent); }
+:root[data-look="paper"] .c-andrew b, :root[data-look="paper"] .c-iris b, :root[data-look="paper"] .c-sarah b, :root[data-look="paper"] .c-tony b { color: #fff; }
 @keyframes driftA { 0%,100% { transform: translate(0,0); } 50% { transform: translate(26px,-14px); } }
 @keyframes driftB { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-22px,16px); } }
 .drift-a { animation: driftA 7s ease-in-out infinite; }
 .drift-b { animation: driftB 8s ease-in-out infinite; }
-button.cursor { pointer-events: auto; }
+button.cursor { pointer-events: auto; z-index: 3; }
 button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .peek { position: absolute; width: 330px; background: #1e2231; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: 0 20px 40px rgba(0,0,0,.45); font-size: 18px; line-height: 1.45; z-index: 4; }
 .peek b { display: block; font: 700 20px var(--display); margin-bottom: 4px; }
@@ -96,8 +102,36 @@ button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .follow p { margin: 0; font: 600 17px/1.4 var(--mono); color: var(--muted); max-width: 170px; }
 .follow[hidden] { display: none; }
 
+
+/* Opening graphic: three agents' lines merge into one shared draft */
+.title-top { position: relative; z-index: 2; }
+.title-top .h-xl { margin: 0 0 18px; }
+.title-top .title-meta { margin-top: 26px; }
+.merge { position: absolute; left: 0; right: 0; top: 520px; height: 330px; cursor: pointer; --m1: var(--jordan); --m2: #f2b51d; --m3: #ef5f8b; --ms: var(--text); }
+.merge svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ml { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.ml1 { stroke: var(--m1); } .ml2 { stroke: var(--m2); } .ml3 { stroke: var(--m3); }
+.ml.shared { stroke: var(--ms); stroke-width: 9; }
+.mdot { fill: var(--ms); }
+.mlab { position: absolute; left: 110px; font: 500 22px var(--body); color: var(--muted); }
+.mlab.shared-lab { font: 700 24px var(--body); color: var(--text); }
+.slide.active .ml1 { animation: draw 1.3s cubic-bezier(.45,0,.2,1) .25s both; }
+.slide.active .ml2 { animation: draw 1.3s cubic-bezier(.45,0,.2,1) .45s both; }
+.slide.active .ml3 { animation: draw 1.3s cubic-bezier(.45,0,.2,1) .65s both; }
+.slide.active .mdot { animation: pop .4s cubic-bezier(.2,1.6,.4,1) 1.9s both; transform-box: fill-box; transform-origin: center; }
+.slide.active .ml.shared { animation: draw .9s ease-out 2.05s both; }
+.slide.active .mlab.l1 { animation: fadein .5s ease .3s both; }
+.slide.active .mlab.l2 { animation: fadein .5s ease .5s both; }
+.slide.active .mlab.l3 { animation: fadein .5s ease .7s both; }
+.slide.active .shared-lab { animation: fadein .6s ease 2.6s both; }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.follow { top: auto; bottom: 36px; }
+:root[data-look="paper"] .merge { --m1: #2f86d6; --m2: #e3a614; --m3: #e0567f; --ms: #1f1c17; }
+
 /* Persona */
-.persona-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-top: 30px; }
+.persona-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 30px; }
 .mate { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 26px; position: relative; }
 .mate .dot, .mate-flip .dot { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font: 800 24px var(--display); color: #12131a; margin-bottom: 18px; }
 .mate h3, .mate-flip .h3 { font: 700 30px var(--display); letter-spacing: -0.02em; }
@@ -204,13 +238,13 @@ button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .code .ln em { font-style: normal; color: #565d78; text-align: right; padding-right: 14px; }
 .code .ln span { color: #c3c9da; }
 .code .ln .tg { color: #7f8bb0; }
-.code .ln.claim-m { background: rgba(255,128,97,.10); border-left-color: var(--maya); }
-.code .ln.claim-j { background: rgba(93,185,255,.10); border-left-color: var(--jordan); }
+.code .ln.claim-m { background: rgba(93,185,255,.10); border-left-color: var(--jordan); }
+.code .ln.claim-j { background: rgba(127,220,174,.12); border-left-color: var(--sam); }
 .code .ln.live { background: rgba(127,220,174,.14); border-left-color: var(--sam); }
 .code .ln.flash span { animation: flash 1.2s ease; }
 @keyframes flash { 0% { color: #fff; text-shadow: 0 0 12px var(--accent); } 100% { text-shadow: none; } }
 .fcur { position: absolute; right: 14px; display: flex; align-items: center; gap: 6px; font: 700 13px var(--body); color: #12131a; padding: 4px 9px; border-radius: 6px; transition: top .9s cubic-bezier(.5,0,.2,1), opacity .4s ease; white-space: nowrap; }
-.fcur.m { background: var(--maya); } .fcur.j { background: var(--jordan); }
+.fcur.m { background: var(--jordan); } .fcur.j { background: var(--sam); }
 .fcur.off { opacity: 0; }
 .file-foot { border-top: 1px solid var(--line); padding: 12px 18px; font: 600 14px var(--mono); color: var(--muted); min-height: 46px; }
 .file-foot.ok { color: var(--sam); }
@@ -465,7 +499,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 :root[data-look="paper"] .floor .role, :root[data-look="paper"] .stop .when, :root[data-look="paper"] .q-flip .qk, :root[data-look="paper"] .coach .hello, :root[data-look="paper"] .reason-flip .back .bk { font-size: 17px; }
 
 /* ---------- Meet our team: polaroids that flip ---------- */
-.polaroids { display: flex; gap: 26px; justify-content: center; margin-top: 34px; }
+.polaroids { display: flex; gap: 26px; justify-content: center; margin-top: 46px; }
 .pol { width: 236px; height: 344px; flex: none; }
 .pol .front { background: #fffdf8; color: #1f1c17; border-radius: 3px; padding: 14px 14px 0; align-items: center; box-shadow: 0 14px 30px rgba(0,0,0,.18); }
 .pol .photo { width: 208px; height: 208px; display: grid; place-items: center; font: 800 76px var(--display); color: #fff; overflow: hidden; background: var(--c); }
@@ -516,70 +550,49 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 
 <!-- 1 Title -->
 <section class="slide" data-title="Title">
-  <button type="button" class="cursor c-maya drift-a" style="left:1000px; top:110px" data-peek="maya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Maya's AI</b></button>
-  <button type="button" class="cursor c-jordan drift-b" style="left:1250px; top:250px" data-peek="jordan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Jordan's AI</b></button>
-  <button type="button" class="cursor c-sam drift-b" style="left:880px; top:330px" data-peek="sam"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Sam's AI</b></button>
-  <button type="button" class="cursor c-priya drift-a" style="left:1150px; top:420px" data-peek="priya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Priya</b></button>
-  <div class="peek" id="peek" hidden></div>
-  <div class="title-wrap">
+  <button type="button" class="cursor c-andrew drift-a" style="left:1000px; top:120px" data-peek="0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Andrew</b></button>
+  <button type="button" class="cursor c-iris drift-b" style="left:1270px; top:170px" data-peek="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Iris</b></button>
+  <button type="button" class="cursor c-sarah drift-b" style="left:1060px; top:280px" data-peek="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Sarah</b></button>
+  <button type="button" class="cursor c-evelyn drift-a" style="left:1330px; top:330px" data-peek="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Evelyn</b></button>
+  <button type="button" class="cursor c-tony drift-a" style="left:1150px; top:400px" data-peek="4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Tony</b></button>
+  <div class="title-top">
     <div class="eyebrow"><i></i>Agent workspace · Club showcase</div>
     <h1 class="h-xl"><span class="pname" data-name>[Name]</span></h1>
-    <p class="lede">The team room for student builders. Everyone's AI, in one room, in plain English.</p>
+    <p class="lede">A team room for coding agents, built for student teams.</p>
     <div class="title-meta">
-      <span class="tag" id="team-names">Evelyn · Iris · Andrew · Sarah · Tony</span>
+      <span class="tag" id="team-names">Andrew · Iris · Sarah · Evelyn · Tony</span>
       <span class="tag">Thu, Nov 19, 2026</span>
-      <span class="hint">Tap a cursor to meet the team's AIs</span>
+      <span class="hint">Tap a cursor to meet us</span>
     </div>
+  </div>
+  <div class="merge" id="merge" data-interactive title="Click to replay">
+    <svg viewBox="0 0 1600 330" preserveAspectRatio="none" aria-hidden="true">
+      <path class="ml ml1" pathLength="1" d="M0 40 H520 C700 40 720 165 900 165"/>
+      <path class="ml ml2" pathLength="1" d="M0 165 H900"/>
+      <path class="ml ml3" pathLength="1" d="M0 290 H520 C700 290 720 165 900 165"/>
+      <path class="ml shared" pathLength="1" d="M900 165 H1600"/>
+      <circle class="mdot" cx="900" cy="165" r="9"/>
+    </svg>
+    <span class="mlab l1" style="top:2px">Your agent</span>
+    <span class="mlab l2" style="top:127px">A teammate's agent</span>
+    <span class="mlab l3" style="top:252px">Another teammate's agent</span>
+    <span class="mlab shared-lab" style="left:924px; top:122px">One shared draft</span>
   </div>
   <div class="follow" id="follow" hidden data-interactive>
     <div class="qr" id="qr" aria-label="QR code to open this deck on your phone"></div>
     <p>Scan to follow along and try the demo yourself</p>
   </div>
-  <aside class="notes">Open with the room, not the tech. Tap a cursor or two: "Each colored cursor is a teammate's AI. Tonight we'll show you what happens when they finally share one room." Invite the audience to scan the QR code so they can play the demo on their phones. Set the product name in this panel once the team picks one.</aside>
+  <div class="peek" id="peek" hidden></div>
+  <aside class="notes">Each floating cursor is one of us, like live cursors in a shared doc: tap one to introduce that teammate. Let the lines draw in: every teammate's agent works on its own line, and the room merges them into one shared draft. Click the lines to replay. Invite the audience to scan the QR code so they can play the demo on their phones. Set the product name in this panel once the team picks one.</aside>
 </section>
 
-<!-- 2 Persona: our real team -->
+<!-- 2 Meet the team -->
 <section class="slide" data-title="Meet the team">
   <div class="eyebrow"><i></i>Meet the team</div>
-  <h2 class="h-l">Five students. Every AI. One room.</h2>
-  <div class="hint" style="margin-top:14px">Tap a teammate to hear their side</div>
-  <div class="persona-grid" data-interactive>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Sarah: tap to flip">
-      <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--maya)">S</span><span class="h3">Sarah</span><span class="p">Built VoiceTag</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">&ldquo;Ask me about VoiceTag.&rdquo;</span><span class="who">Sarah</span></span>
-      </span>
-    </button>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Tony: tap to flip">
-      <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--jordan)">T</span><span class="h3">Tony</span><span class="p">[Add Tony&rsquo;s one-liner]</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">[Ask me about: &hellip;]</span><span class="who">Tony</span></span>
-      </span>
-    </button>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Andrew: tap to flip">
-      <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--sam)">A</span><span class="h3">Andrew</span><span class="p">Building the team room</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">&ldquo;Ask me about the room you&rsquo;re watching.&rdquo;</span><span class="who">Andrew</span></span>
-      </span>
-    </button>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Evelyn: tap to flip">
-      <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--accent)">E</span><span class="h3">Evelyn</span><span class="p">Runs the pitch and research</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">&ldquo;Ask me about the research and the numbers.&rdquo;</span><span class="who">Evelyn</span></span>
-      </span>
-    </button>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Iris: tap to flip">
-      <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--priya)">I</span><span class="h3">Iris</span><span class="p">Built AgentMesh</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">&ldquo;Ask me about AgentMesh.&rdquo;</span><span class="who">Iris</span></span>
-      </span>
-    </button>
-  </div>
-  <div class="pain-need">
-    <div class="pn" data-step="1"><b>Pain</b>Every AI works alone. Teammates paste messages between them, and someone who doesn't code can't see what's happening at all.</div>
-    <div class="pn" data-step="2"><b>Need</b>One place where every teammate, coder or not, sees what each AI is doing before it does it.</div>
-  </div>
-  <aside class="notes">Introduce the five of you here, then flip a card or two: each back says what to ask that teammate about. Click the background twice for Pain and Need. Fill in Tony's card before Thursday.</aside>
+  <h2 class="h-l">Five of us, building the room we needed.</h2>
+  <div class="hint" style="margin-top:12px">Tap a photo to flip it</div>
+  <div class="polaroids" id="polaroids" data-interactive></div>
+  <aside class="notes">Introduce each person as you tap their photo; the back shows their major and background. Fill in the TEAM list at the top of the script, and put photos in a "team" folder next to this file (for example team/iris.jpg).</aside>
 </section>
 
 <!-- 3 Stat -->
@@ -642,10 +655,10 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
       <div class="scene s3" aria-hidden="true">
         <div class="feedlines"><div>refactor useAuth hook · 3 files<br>migrate schema v2 → v3<br>fix race in sync worker<br>bump deps, rerun lint<br>refactor useAuth hook · 3 files<br>migrate schema v2 → v3<br>fix race in sync worker<br>bump deps, rerun lint</div></div>
         <div class="q">?</div>
-        <div class="out"><div class="av">P</div><small>Priya</small></div>
+        <div class="out"><div class="av">?</div><small>Teammate</small></div>
       </div>
       <div class="n">3</div><h3>Non-coders get locked out</h3><p>The teammate who doesn't code can't follow the work, so they can't help shape it.</p><span class="tapme">Tap to see the fix</span></span>
-        <span class="face back"><span class="bk">How the room fixes it</span><h3>Everyone can follow</h3><p>A plain-English feed. Priya follows every step and approves what goes live.</p></span>
+        <span class="face back"><span class="bk">How the room fixes it</span><h3>Everyone can follow</h3><p>A plain-English feed. Everyone follows every step, and a person approves what goes live.</p></span>
       </span>
     </button>
   </div>
@@ -674,10 +687,11 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
       <div class="chan">#decisions</div>
       <div class="who-list">
         <h4 style="margin:0">In the room</h4>
-        <span><i style="background:var(--maya)"></i>Maya + Claude</span>
-        <span><i style="background:var(--jordan)"></i>Jordan + Codex</span>
-        <span><i style="background:var(--sam)"></i>Sam + Gemini</span>
-        <span><i style="background:var(--priya)"></i>Priya</span>
+        <span><i style="background:var(--jordan)"></i>Andrew + AI</span>
+        <span><i style="background:var(--sam)"></i>Iris + AI</span>
+        <span><i style="background:var(--maya)"></i>Sarah + AI</span>
+        <span><i style="background:var(--priya)"></i>Tony + AI</span>
+        <span><i style="background:var(--accent)"></i>Evelyn</span>
       </div>
     </aside>
     <div class="feed-wrap">
@@ -691,17 +705,17 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
         <button type="button" class="btn primary" id="demo-play">Play the scene</button>
       </div>
       <div class="feed" id="feed" aria-live="polite">
-        <div class="empty-hint" id="demo-hint">Two teammates ask their AIs to change the same title at the same time. Press <b>Play the scene</b> and watch the file on the right.</div>
+        <div class="empty-hint" id="demo-hint">Andrew and Iris ask their AIs to change the same title at the same time. Press <b>Play the scene</b> and watch the file on the right.</div>
       </div>
     </div>
     <div class="file">
       <div class="file-bar"><b>index.html</b><span>shared file</span></div>
       <div class="code" id="code"></div>
       <div class="file-foot" id="file-foot">No one is editing yet.</div>
-      <div class="stamp" id="stamp-approved">Approved<strong>Live</strong>by Priya</div>
+      <div class="stamp" id="stamp-approved">Approved<strong>Live</strong>by Evelyn</div>
     </div>
   </div>
-  <aside class="notes">Press Play and point at the file on the right: Maya's cursor claims the title, Jordan's heads for the same line. When the warning appears, ask the audience: "Wait, or take the footer?" and click their pick. Flip to Technical to show it's the same update, just translated. End by approving the preview as Priya.</aside>
+  <aside class="notes">Press Play and point at the file on the right: Andrew's AI claims the title, and Iris's AI heads for the same line. When the warning appears, ask the audience: "Wait, or take the footer?" and click their pick. Flip to Technical to show it's the same update, just translated. End by approving the preview as Evelyn, the teammate who doesn't write the code.</aside>
 </section>
 
 <!-- 8 Three layers -->
@@ -731,7 +745,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     </div>
     <div class="coach" id="coach"></div>
   </div>
-  <aside class="notes">Click through as if you're Sam on day one. On each step, ask the room "what do you think just happened?" before tapping "What just happened?"</aside>
+  <aside class="notes">Click through as if it's your first day building with AI. On each step, ask the room "what do you think just happened?" before tapping "What just happened?"</aside>
 </section>
 
 <!-- 10 Hub -->
@@ -795,29 +809,20 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   <aside class="notes">Keep this honest: step 1 is real, steps 2 and 3 are the plan. Name the club or hackathon once the team picks a pilot.</aside>
 </section>
 
-<!-- Meet our team -->
-<section class="slide" data-title="Meet our team">
-  <div class="eyebrow"><i></i>Meet our team</div>
-  <h2 class="h-m">The people building it.</h2>
-  <div class="hint" style="margin-top:12px">Tap a photo to flip it</div>
-  <div class="polaroids" id="polaroids" data-interactive></div>
-  <div class="src">Majors, backgrounds and photos coming from the team</div>
-  <aside class="notes">Tap each photo as you introduce the person; the back shows their major and background. Fill in the TEAM list at the top of the script, and put photos in a "team" folder next to this file (for example team/iris.jpg).</aside>
-</section>
-
 <!-- 13 Close -->
 <section class="slide center" data-title="Close">
-  <span class="cursor c-maya gather" style="left:1180px; top:150px; --fx:-700px; --fy:-300px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Maya's AI</b></span>
-  <span class="cursor c-jordan gather" style="left:1330px; top:220px; --fx:400px; --fy:-260px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Jordan's AI</b></span>
-  <span class="cursor c-sam gather" style="left:1210px; top:600px; --fx:-640px; --fy:300px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Sam's AI</b></span>
-  <span class="cursor c-priya gather" style="left:1340px; top:670px; --fx:360px; --fy:260px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Priya</b></span>
+  <span class="cursor c-andrew gather" style="left:1180px; top:140px; --fx:-700px; --fy:-300px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Andrew</b></span>
+  <span class="cursor c-iris gather" style="left:1340px; top:220px; --fx:400px; --fy:-260px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Iris</b></span>
+  <span class="cursor c-sarah gather" style="left:1220px; top:560px; --fx:-640px; --fy:300px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Sarah</b></span>
+  <span class="cursor c-evelyn gather" style="left:1360px; top:640px; --fx:360px; --fy:260px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Evelyn</b></span>
+  <span class="cursor c-tony gather" style="left:1290px; top:390px; --fx:520px; --fy:40px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Tony</b></span>
   <div class="close-lines">
     <div>The room makes teams <span>work</span>.</div>
     <div>The guide makes beginners <span>stay</span>.</div>
     <div>The hub makes it <span>grow</span>.</div>
   </div>
   <p class="lede" style="margin-top:40px"><span class="pname" data-name>[Name]</span>, the team room for student builders. Questions?</p>
-  <aside class="notes">The four cursors gather in the room as the slide opens. End on the three lines, then the name. The Q&amp;A cards come next.</aside>
+  <aside class="notes">Our five cursors gather in the room as the slide opens. End on the three lines, then the name. The Q&amp;A cards come next.</aside>
 </section>
 
 <!-- 14 Appendix: Q&A cards -->
@@ -913,11 +918,11 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 
   /* Our real team. Fill in majors, one line about each person, and photo paths (photos go in a "team" folder next to this file). */
   var TEAM = [
-    { name: 'Evelyn', role: 'Leads the pitch and research', major: '[Major]', about: '[One line about you]', photo: 'team/evelyn.jpg' },
-    { name: 'Iris', role: 'Built AgentMesh, shared code knowledge', major: '[Major]', about: '[One line about you]', photo: 'team/iris.jpg' },
-    { name: 'Andrew', role: 'Builds the team room app', major: '[Major]', about: '[One line about you]', photo: 'team/andrew.jpg' },
-    { name: 'Sarah', role: '[Role on this project]', major: '[Major]', about: '[One line about you]', photo: 'team/sarah.jpg' },
-    { name: 'Tony', role: '[Role on this project]', major: '[Major]', about: '[One line about you]', photo: 'team/tony.jpg' }
+    { name: 'Andrew', role: 'Builds the team room app', major: '[Major]', about: '[One line about you]', photo: 'team/andrew.jpg', color: '#2f86d6' },
+    { name: 'Iris', role: 'Built AgentMesh, shared code knowledge', major: '[Major]', about: '[One line about you]', photo: 'team/iris.jpg', color: '#2a9d66' },
+    { name: 'Sarah', role: '[Role on this project]', major: '[Major]', about: '[One line about you]', photo: 'team/sarah.jpg', color: '#e8613f' },
+    { name: 'Evelyn', role: 'Leads the pitch and research', major: '[Major]', about: '[One line about you]', photo: 'team/evelyn.jpg', color: '#d99a00' },
+    { name: 'Tony', role: '[Role on this project]', major: '[Major]', about: '[One line about you]', photo: 'team/tony.jpg', color: '#8a5cf0' }
   ];
 
   var stage = document.getElementById('stage');
@@ -1099,18 +1104,12 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   });
 
   /* ---------- Slide 1: tap a cursor, follow-along QR ---------- */
-  var peeks = {
-    maya:   { t: "Maya's AI", d: "Claude Code. About to change the landing page title.", s: 'Maya · front end' },
-    jordan: { t: "Jordan's AI", d: "Codex. Also wants to change the landing page title.", s: 'Jordan · backend' },
-    sam:    { t: "Sam's AI", d: "Gemini. Sam's first hackathon, so it explains as it goes.", s: 'Sam · learning fast' },
-    priya:  { t: 'Priya', d: "Doesn't code. Needs to follow all of it to pitch it.", s: 'Priya · runs the pitch' }
-  };
   var peek = $('peek');
   each(document.querySelectorAll('[data-peek]'), function (b) {
     b.addEventListener('click', function () {
-      var p = peeks[b.dataset.peek];
+      var t = TEAM[+b.dataset.peek];
       peek.innerHTML = '';
-      peek.appendChild(el('b', null, p.t)); peek.appendChild(document.createTextNode(p.d)); peek.appendChild(el('small', null, p.s));
+      peek.appendChild(el('b', null, t.name)); peek.appendChild(document.createTextNode(t.role)); peek.appendChild(el('small', null, t.major));
       var r = b.getBoundingClientRect(), sr = stage.getBoundingClientRect(), sc = sr.width / 1600;
       var x = (r.left - sr.left) / sc, y = (r.bottom - sr.top) / sc;
       peek.style.left = Math.min(x, 1600 - 360) + 'px';
@@ -1159,7 +1158,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
       var t = el('span', l[1] === 'tg' ? 'tg' : '', l[0]); row.appendChild(t);
       code.appendChild(row); lineEls.push(row);
     });
-    curM = el('div', 'fcur m off', "Maya's AI"); curJ = el('div', 'fcur j off', "Jordan's AI");
+    curM = el('div', 'fcur m off', "Andrew's AI"); curJ = el('div', 'fcur j off', "Iris's AI");
     curM.style.top = (PAD + 2 * LINE_H + 4) + 'px'; curJ.style.top = (PAD + 7 * LINE_H + 4) + 'px';
     code.appendChild(curM); code.appendChild(curJ);
     foot.className = 'file-foot'; foot.textContent = 'No one is editing yet.';
@@ -1168,26 +1167,26 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   function moveCur(c, line) { c.classList.remove('off'); c.style.top = (PAD + line * LINE_H + 4) + 'px'; }
   function setText(line, txt) { var s = lineEls[line].querySelector('span'); s.textContent = txt; lineEls[line].classList.remove('flash'); void lineEls[line].offsetWidth; lineEls[line].classList.add('flash'); }
   var fx = {
-    mayaClaim: function () { moveCur(curM, 2); lineEls[2].classList.add('claim-m'); foot.className = 'file-foot'; foot.textContent = "Line 3 is claimed by Maya's AI."; },
-    jordanApproach: function () { moveCur(curJ, 6); setTimeout(function () { moveCur(curJ, 3); }, 500); foot.className = 'file-foot warn'; foot.textContent = "Jordan's AI is heading for the same line."; },
+    mayaClaim: function () { moveCur(curM, 2); lineEls[2].classList.add('claim-m'); foot.className = 'file-foot'; foot.textContent = "Line 3 is claimed by Andrew's AI."; },
+    jordanApproach: function () { moveCur(curJ, 6); setTimeout(function () { moveCur(curJ, 3); }, 500); foot.className = 'file-foot warn'; foot.textContent = "Iris's AI is heading for the same line."; },
     jordanFooter: function () { moveCur(curJ, 10); lineEls[10].classList.add('claim-j'); foot.className = 'file-foot ok'; foot.textContent = 'No collision. Two AIs, two different lines.'; },
-    jordanWait: function () { moveCur(curJ, 5); curJ.textContent = "Jordan's AI · waiting"; foot.className = 'file-foot ok'; foot.textContent = "Jordan's AI is waiting its turn."; },
+    jordanWait: function () { moveCur(curJ, 5); curJ.textContent = "Iris's AI · waiting"; foot.className = 'file-foot ok'; foot.textContent = "Iris's AI is waiting its turn."; },
     mayaDone: function () { setText(2, '  <h1>Build it together</h1>'); },
     footerDone: function () { setText(10, '  <p>Made at USC</p>'); },
     approved: function () {
       each(lineEls, function (r) { r.classList.remove('claim-m', 'claim-j'); });
       lineEls[2].classList.add('live'); if (lineEls[10].textContent.indexOf('Made at USC') > -1) lineEls[10].classList.add('live');
       curM.classList.add('off'); curJ.classList.add('off');
-      foot.className = 'file-foot ok'; foot.textContent = 'Approved by Priya. Live for the team.';
+      foot.className = 'file-foot ok'; foot.textContent = 'Approved by Evelyn. Live for the team.';
       $('stamp-approved').classList.add('show');
     }
   };
   var people = {
-    maya:   { label: 'Maya', color: 'var(--maya)', init: 'M' },
-    mayaAI: { label: "Maya's AI", sub: 'Claude Code', color: 'var(--maya)', init: 'AI', ai: true },
-    jordan: { label: 'Jordan', color: 'var(--jordan)', init: 'J' },
-    jordanAI: { label: "Jordan's AI", sub: 'Codex', color: 'var(--jordan)', init: 'AI', ai: true },
-    priya:  { label: 'Priya', color: 'var(--priya)', init: 'P' },
+    maya:   { label: 'Andrew', color: 'var(--jordan)', init: 'A' },
+    mayaAI: { label: "Andrew's AI", color: 'var(--jordan)', init: 'AI', ai: true },
+    jordan: { label: 'Iris', color: 'var(--sam)', init: 'I' },
+    jordanAI: { label: "Iris's AI", color: 'var(--sam)', init: 'AI', ai: true },
+    priya:  { label: 'Evelyn', color: 'var(--accent)', init: 'E' },
     room:   { label: 'Room', sub: 'preview', color: 'var(--accent)', init: '✓', ai: true }
   };
   function addMsg(m) {
@@ -1220,10 +1219,10 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     }
     if (m.approve) {
       var a = el('div', 'choices');
-      var ab = el('button', 'btn primary', 'Approve preview as Priya'); ab.type = 'button';
+      var ab = el('button', 'btn primary', 'Approve preview as Evelyn'); ab.type = 'button';
       ab.addEventListener('click', function () {
-        ab.disabled = true; ab.textContent = 'Approved by Priya';
-        run([{ who: 'room', plain: 'Approved. The changes are live for the team.', tech: 'merge draft → main · approved_by=priya · deploy ok', fx: 'approved', wait: 700 }]);
+        ab.disabled = true; ab.textContent = 'Approved by Evelyn';
+        run([{ who: 'room', plain: 'Approved. The changes are live for the team.', tech: 'merge draft → main · approved_by=evelyn · deploy ok', fx: 'approved', wait: 700 }]);
       });
       a.appendChild(ab); holder.appendChild(a);
     }
@@ -1253,24 +1252,24 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   }
   var opening = [
     { who: 'maya', text: 'Make the landing page title friendlier.', wait: 700 },
-    { who: 'mayaAI', plain: "I'm starting on the landing page title. I'll post when it's ready.", tech: 'claim src/pages/index.html · <h1> (line 3) · branch draft/maya', fx: 'mayaClaim' },
+    { who: 'mayaAI', plain: "I'm starting on the landing page title. I'll post when it's ready.", tech: 'claim src/pages/index.html · <h1> (line 3) · branch draft/andrew', fx: 'mayaClaim' },
     { who: 'jordan', text: 'Change the landing page title to "Ship it together."', fx: 'jordanApproach' },
     { who: 'jordanAI', warn: true,
-      plain: "Maya's AI is already changing this title. Want me to wait, or take the footer instead?",
-      tech: 'conflict: src/pages/index.html line 3 claimed by maya/claude-code 40s ago · options: queue | reroute(footer)',
+      plain: "Andrew's AI is already changing this title. Want me to wait, or take the footer instead?",
+      tech: 'conflict: src/pages/index.html line 3 claimed by agent:andrew 40s ago · options: queue | reroute(footer)',
       choices: [
-        { label: 'Wait for Maya', then: [
-          { who: 'jordanAI', plain: "Okay, I'll wait and pass your title idea to Maya's AI.", tech: 'queued · notify maya/claude-code · attach suggestion', fx: 'jordanWait' },
-          { who: 'mayaAI', plain: 'Done. New title: "Build it together." I used part of Jordan\'s idea.', tech: 'commit on draft/maya · preview build ready', fx: 'mayaDone' },
+        { label: 'Wait for Andrew', then: [
+          { who: 'jordanAI', plain: "Okay, I'll wait and pass your title idea to Andrew's AI.", tech: 'queued · notify agent:andrew · attach suggestion', fx: 'jordanWait' },
+          { who: 'mayaAI', plain: 'Done. New title: "Build it together." I used part of Iris\'s idea.', tech: 'commit on draft/andrew · preview build ready', fx: 'mayaDone' },
           { who: 'priya', text: 'I can actually follow this! Love the new title.' },
-          { who: 'room', plain: 'A preview is ready. Nothing goes live until someone approves it.', tech: 'preview: draft/maya · status: awaiting approval', approve: true }
+          { who: 'room', plain: 'A preview is ready. Nothing goes live until someone approves it.', tech: 'preview: draft/andrew · status: awaiting approval', approve: true }
         ]},
         { label: 'Take the footer', primary: true, then: [
-          { who: 'jordanAI', plain: "On it. I'll update the footer instead, so nothing collides.", tech: 'claim src/pages/index.html · footer (line 11) · branch draft/jordan', fx: 'jordanFooter' },
-          { who: 'mayaAI', plain: 'Title is done: "Build it together."', tech: 'commit on draft/maya · preview build ready', fx: 'mayaDone' },
+          { who: 'jordanAI', plain: "On it. I'll update the footer instead, so nothing collides.", tech: 'claim src/pages/index.html · footer (line 11) · branch draft/iris', fx: 'jordanFooter' },
+          { who: 'mayaAI', plain: 'Title is done: "Build it together."', tech: 'commit on draft/andrew · preview build ready', fx: 'mayaDone' },
           { who: 'priya', text: 'I can actually follow this! Can the footer say "Made at USC"?' },
-          { who: 'jordanAI', plain: 'Done. The footer now says "Made at USC."', tech: 'commit on draft/jordan · footer text updated', fx: 'footerDone' },
-          { who: 'room', plain: 'A preview is ready. Nothing goes live until someone approves it.', tech: 'preview: draft/maya + draft/jordan · status: awaiting approval', approve: true }
+          { who: 'jordanAI', plain: 'Done. The footer now says "Made at USC."', tech: 'commit on draft/iris · footer text updated', fx: 'footerDone' },
+          { who: 'room', plain: 'A preview is ready. Nothing goes live until someone approves it.', tech: 'preview: draft/andrew + draft/iris · status: awaiting approval', approve: true }
         ]}
       ] }
   ];
@@ -1278,7 +1277,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     timers.forEach(clearTimeout); timers = [];
     feed.innerHTML = '';
     var h = el('div', 'empty-hint'); h.id = 'demo-hint';
-    h.innerHTML = 'Two teammates ask their AIs to change the same title at the same time. Press <b>Play the scene</b> and watch the file on the right.';
+    h.innerHTML = 'Andrew and Iris ask their AIs to change the same title at the same time. Press <b>Play the scene</b> and watch the file on the right.';
     feed.appendChild(h);
     $('demo-play').disabled = false;
     buildFile();
@@ -1314,9 +1313,9 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 
   /* ---------- Learn as you build ---------- */
   var learn = [
-    { t: 'Connect your AI', d: 'Pick the AI you already use: Claude, ChatGPT or Gemini. One click adds it to your team room.', ex: 'Connected: Sam + Gemini joined #landing-page', why: "Your AI can now see what your teammates' AIs are doing, so it won't step on their work." },
+    { t: 'Connect your AI', d: 'Pick the AI you already use: Claude, ChatGPT or Gemini. One click adds it to your team room.', ex: 'Connected: your AI joined #landing-page', why: "Your AI can now see what your teammates' AIs are doing, so it won't step on their work." },
     { t: 'Send your first prompt', d: 'Ask for something small. Your AI posts a note before it changes anything.', ex: 'Add a sign-up button to the home page.', why: 'Teammates see what your AI is about to change, so two AIs never edit the same thing at once.' },
-    { t: 'Read the team feed', d: 'Every update is written in plain English. Switch to Technical anytime to learn the real terms.', ex: "Sam's AI: I'm adding a sign-up button to the home page.", why: 'Technical view shows the file and branch names, so you pick up the vocabulary as you go.' },
+    { t: 'Read the team feed', d: 'Every update is written in plain English. Switch to Technical anytime to learn the real terms.', ex: "Your AI: I'm adding a sign-up button to the home page.", why: 'Technical view shows the file and branch names, so you pick up the vocabulary as you go.' },
     { t: 'Open your preview', d: 'Changes land in a preview first. You can click around before anything goes live.', ex: 'Preview ready · waiting for a teammate to approve', why: 'Nothing reaches the live project until a person on your team approves it.' }
   ];
   var li = 0;
@@ -1386,7 +1385,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
       var b = el('button', 'flip pol'); b.type = 'button'; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', t.name + ': tap to flip');
       var inner = el('span', 'inner');
       var front = el('span', 'face front');
-      var ph = el('span', 'photo'); ph.style.setProperty('--c', polColors[k % polColors.length]);
+      var ph = el('span', 'photo'); ph.style.setProperty('--c', t.color || polColors[k % polColors.length]);
       var initial = t.name.replace(/[^A-Za-z]/g, '').charAt(0) || '?';
       ph.textContent = initial;
       if (t.photo) {
@@ -1400,6 +1399,13 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
       inner.appendChild(front); inner.appendChild(back); b.appendChild(inner); wrap.appendChild(b);
     });
   })();
+
+  /* Opening graphic: click to replay */
+  $('merge').addEventListener('click', function () {
+    var m = $('merge'), clone = m.cloneNode(true);
+    m.parentNode.replaceChild(clone, m);
+    clone.addEventListener('click', arguments.callee);
+  });
 
   /* ---------- Look: notebook or dark room ---------- */
   var lookSel = $('look-select');
