@@ -83,8 +83,14 @@ h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-
 :root[data-look="paper"] .c-andrew b, :root[data-look="paper"] .c-iris b, :root[data-look="paper"] .c-sarah b, :root[data-look="paper"] .c-tony b { color: #fff; }
 @keyframes driftA { 0%,100% { transform: translate(0,0); } 50% { transform: translate(26px,-14px); } }
 @keyframes driftB { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-22px,16px); } }
+@keyframes driftC { 0%,100% { transform: translate(0,0); } 50% { transform: translate(18px,-24px); } }
+@keyframes driftD { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-32px,-8px); } }
+@keyframes driftE { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,20px); } }
 .drift-a { animation: driftA 7s ease-in-out infinite; }
-.drift-b { animation: driftB 8s ease-in-out infinite; }
+.drift-b { animation: driftB 8s ease-in-out infinite; animation-delay: -2.5s; }
+.drift-c { animation: driftC 6.5s ease-in-out infinite; animation-delay: -1.2s; }
+.drift-d { animation: driftD 9.5s ease-in-out infinite; animation-delay: -4s; }
+.drift-e { animation: driftE 7.5s ease-in-out infinite; animation-delay: -6s; }
 button.cursor { pointer-events: auto; z-index: 3; }
 button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .peek { position: absolute; width: 330px; background: #1e2231; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: 0 20px 40px rgba(0,0,0,.45); font-size: 18px; line-height: 1.45; z-index: 4; }
@@ -553,9 +559,9 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 <section class="slide" data-title="Title">
   <button type="button" class="cursor c-andrew drift-a" style="left:960px; top:130px" data-peek="0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · editing the title</b></button>
   <button type="button" class="cursor c-iris drift-b" style="left:1010px; top:205px" data-peek="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · editing the title</b></button>
-  <button type="button" class="cursor c-sarah drift-b" style="left:1290px; top:120px" data-peek="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Gemini · adding sign-up</b></button>
-  <button type="button" class="cursor c-evelyn drift-a" style="left:1230px; top:300px" data-peek="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · fixing the footer</b></button>
-  <button type="button" class="cursor c-tony drift-a" style="left:1080px; top:390px" data-peek="4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · writing tests</b></button>
+  <button type="button" class="cursor c-sarah drift-c" style="left:1290px; top:120px" data-peek="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Gemini · adding sign-up</b></button>
+  <button type="button" class="cursor c-evelyn drift-d" style="left:1230px; top:300px" data-peek="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · fixing the footer</b></button>
+  <button type="button" class="cursor c-tony drift-e" style="left:1080px; top:390px" data-peek="4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · writing tests</b></button>
   <div class="title-top">
     <div class="eyebrow"><i></i>Agent workspace · Club showcase</div>
     <h1 class="h-xl"><span class="pname" data-name>[Name]</span></h1>
