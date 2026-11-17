@@ -251,6 +251,32 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   .slide.active, .msg { animation: none; }
   [data-step] { transition: none; }
 }
+
+/* Clicky feel: cards lift and glow on hover, press feedback */
+.mate, .reason, .proj { cursor: pointer; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.mate:hover, .reason:hover, .proj:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 16px 36px rgba(0,0,0,.4); }
+.mate:active, .reason:active, .proj:active { transform: translateY(-2px) scale(.995); }
+.reason:hover .n { transform: scale(1.06); }
+.reason .n { transition: transform .18s ease; }
+.stop { cursor: pointer; }
+.stop .pin { transition: transform .18s ease, background .18s ease, color .18s ease; }
+.stop:hover .pin { background: var(--accent); color: #17140a; transform: scale(1.1); }
+.chip:hover { border-color: var(--accent); color: var(--text); }
+.sl:hover { border-color: var(--sam); }
+.gridt tbody tr:hover td { background: rgba(255,201,77,.05); }
+
+/* Slide dots in the bottom bar, like the site's nav pills */
+#dots { flex: 1; display: flex; gap: 8px; justify-content: center; align-items: center; margin: 0 10px; }
+#dots button { width: 13px; height: 13px; padding: 0; border-radius: 50%; border: 1px solid #3a4054; background: #1c1f2b; transition: transform .15s ease, background .15s ease, border-color .15s ease; }
+#dots button:hover { transform: scale(1.35); }
+#dots button.cur { background: var(--accent); border-color: var(--accent); }
+
+/* Tap pill: an always-visible clicky affordance, like "GRAB A SLICE" */
+#tap { position: absolute; right: 42px; bottom: 30px; font: 700 16px var(--mono); letter-spacing: .07em; text-transform: uppercase; color: #17140a; background: var(--accent); padding: 13px 20px; border: 0; border-radius: 999px; box-shadow: 0 12px 30px rgba(255,201,77,.28); animation: tapPulse 2.4s ease-in-out infinite; z-index: 4; }
+#tap:hover { filter: brightness(1.08); }
+@keyframes tapPulse { 0%,100% { transform: translateY(0); box-shadow: 0 12px 30px rgba(255,201,77,.28); } 50% { transform: translateY(-5px); box-shadow: 0 18px 38px rgba(255,201,77,.4); } }
+@media (prefers-reduced-motion: reduce) { #tap { animation: none; } }
+
 </style>
 </head>
 <body>
@@ -528,6 +554,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   <aside class="notes">Leave this up during Q&amp;A only if asked where a number came from.</aside>
 </section>
 
+<button type="button" id="tap" aria-label="Next">Tap to reveal</button>
 </div>
 </div>
 
@@ -535,7 +562,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   <button type="button" id="prev" aria-label="Previous">◀</button>
   <button type="button" id="next" aria-label="Next">▶</button>
   <span id="count">1 / 16</span>
-  <div id="progress"><i></i></div>
+  <div id="dots"></div>
   <button type="button" id="btn-slides">Slides</button>
   <button type="button" id="btn-notes">Notes</button>
   <button type="button" id="btn-full">Full screen</button>
@@ -586,19 +613,30 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     applySteps(i);
     slides[i].classList.add('active');
     document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
-    document.querySelector('#progress i').style.width = ((i + 1) / slides.length * 100) + '%';
+    Array.prototype.forEach.call(document.querySelectorAll('#dots button'), function (d, k) { d.classList.toggle('cur', k === i); });
+    updateTap();
     var n = slides[i].querySelector('.notes');
     document.getElementById('notes-text').textContent = n ? n.textContent : '';
     Array.prototype.forEach.call(document.querySelectorAll('#slide-list li'), function (li, k) { li.classList.toggle('cur', k === i); });
     try { if (location.hash !== '#slide-' + (i + 1)) history.replaceState(null, '', '#slide-' + (i + 1)); } catch (err) {}
   }
   function next() {
-    if (stepState[cur] < maxStep(cur)) { stepState[cur]++; applySteps(cur); return; }
+    if (stepState[cur] < maxStep(cur)) { stepState[cur]++; applySteps(cur); updateTap(); return; }
     if (cur < slides.length - 1) { stepState[cur + 1] = 0; show(cur + 1); }
   }
   function prev() {
-    if (stepState[cur] > 0) { stepState[cur]--; applySteps(cur); return; }
+    if (stepState[cur] > 0) { stepState[cur]--; applySteps(cur); updateTap(); return; }
     if (cur > 0) show(cur - 1, true);
+  }
+
+  /* Tap pill: visible affordance for the next click */
+  var tap = document.getElementById('tap');
+  tap.addEventListener('click', next);
+  function updateTap() {
+    var last = cur === slides.length - 1;
+    if (stepState[cur] < maxStep(cur)) { tap.hidden = false; tap.textContent = 'Tap to reveal'; }
+    else if (!last) { tap.hidden = false; tap.textContent = 'Tap for the next slide'; }
+    else { tap.hidden = true; }
   }
 
   /* Click anywhere on the stage to advance, except on interactive parts */
@@ -647,6 +685,15 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     b.addEventListener('click', function () { show(k, true); document.getElementById('slides-drawer').hidden = true; });
     li.appendChild(b); list.appendChild(li);
   });
+  var dots = document.getElementById('dots');
+  slides.forEach(function (s, k) {
+    var d = document.createElement('button');
+    d.type = 'button';
+    d.setAttribute('aria-label', 'Go to slide ' + (k + 1) + ': ' + s.dataset.title);
+    d.addEventListener('click', function () { show(k, true); });
+    dots.appendChild(d);
+  });
+
 
   /* Product name placeholder */
   var nameInput = document.getElementById('name-input');
