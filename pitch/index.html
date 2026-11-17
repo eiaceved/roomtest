@@ -90,6 +90,7 @@ button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .peek { position: absolute; width: 330px; background: #1e2231; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: 0 20px 40px rgba(0,0,0,.45); font-size: 18px; line-height: 1.45; z-index: 4; }
 .peek b { display: block; font: 700 20px var(--display); margin-bottom: 4px; }
 .peek small { display: block; font: 600 14px var(--mono); color: var(--muted); margin-top: 8px; }
+.peek small.warn { color: var(--pen); }
 .peek[hidden] { display: none; }
 
 /* Slide 1 */
@@ -550,11 +551,11 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 
 <!-- 1 Title -->
 <section class="slide" data-title="Title">
-  <button type="button" class="cursor c-andrew drift-a" style="left:1000px; top:120px" data-peek="0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Andrew</b></button>
-  <button type="button" class="cursor c-iris drift-b" style="left:1270px; top:170px" data-peek="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Iris</b></button>
-  <button type="button" class="cursor c-sarah drift-b" style="left:1060px; top:280px" data-peek="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Sarah</b></button>
-  <button type="button" class="cursor c-evelyn drift-a" style="left:1330px; top:330px" data-peek="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Evelyn</b></button>
-  <button type="button" class="cursor c-tony drift-a" style="left:1150px; top:400px" data-peek="4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Tony</b></button>
+  <button type="button" class="cursor c-andrew drift-a" style="left:960px; top:130px" data-peek="0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · editing the title</b></button>
+  <button type="button" class="cursor c-iris drift-b" style="left:1010px; top:205px" data-peek="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · editing the title</b></button>
+  <button type="button" class="cursor c-sarah drift-b" style="left:1290px; top:120px" data-peek="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Gemini · adding sign-up</b></button>
+  <button type="button" class="cursor c-evelyn drift-a" style="left:1230px; top:300px" data-peek="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · fixing the footer</b></button>
+  <button type="button" class="cursor c-tony drift-a" style="left:1080px; top:390px" data-peek="4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · writing tests</b></button>
   <div class="title-top">
     <div class="eyebrow"><i></i>Agent workspace · Club showcase</div>
     <h1 class="h-xl"><span class="pname" data-name>[Name]</span></h1>
@@ -562,7 +563,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     <div class="title-meta">
       <span class="tag" id="team-names">Andrew · Iris · Sarah · Evelyn · Tony</span>
       <span class="tag">Thu, Nov 19, 2026</span>
-      <span class="hint">Tap a cursor to meet us</span>
+      <span class="hint">Tap a cursor to see what each AI is doing</span>
     </div>
   </div>
   <div class="merge" id="merge" data-interactive title="Click to replay">
@@ -583,7 +584,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     <p>Scan to follow along and try the demo yourself</p>
   </div>
   <div class="peek" id="peek" hidden></div>
-  <aside class="notes">Each floating cursor is one of us, like live cursors in a shared doc: tap one to introduce that teammate. Let the lines draw in: every teammate's agent works on its own line, and the room merges them into one shared draft. Click the lines to replay. Invite the audience to scan the QR code so they can play the demo on their phones. Set the product name in this panel once the team picks one.</aside>
+  <aside class="notes">Each floating cursor is a teammate's AI at work. Tap the two editing the title: they're on the same line, which is the problem this whole pitch solves. Let the lines draw in: every teammate's agent works on its own line, and the room merges them into one shared draft. Click the lines to replay. Invite the audience to scan the QR code so they can play the demo on their phones. Set the product name in this panel once the team picks one.</aside>
 </section>
 
 <!-- 2 Meet the team -->
@@ -1104,12 +1105,20 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   });
 
   /* ---------- Slide 1: tap a cursor, follow-along QR ---------- */
+  var AGENTS = [
+    { t: 'Claude', d: 'Editing the landing page title.', s: 'Same line as another AI', warn: true },
+    { t: 'Codex', d: 'Also editing the landing page title.', s: 'Same line as another AI', warn: true },
+    { t: 'Gemini', d: 'Adding a sign-up button to the home page.', s: 'No conflicts' },
+    { t: 'Claude', d: 'Fixing the footer.', s: 'No conflicts' },
+    { t: 'Codex', d: 'Writing tests for the sign-up button.', s: 'Waiting for Gemini to finish' }
+  ];
   var peek = $('peek');
   each(document.querySelectorAll('[data-peek]'), function (b) {
     b.addEventListener('click', function () {
-      var t = TEAM[+b.dataset.peek];
+      var t = AGENTS[+b.dataset.peek];
       peek.innerHTML = '';
-      peek.appendChild(el('b', null, t.name)); peek.appendChild(document.createTextNode(t.role)); peek.appendChild(el('small', null, t.major));
+      peek.appendChild(el('b', null, t.t)); peek.appendChild(document.createTextNode(t.d));
+      var sm = el('small', t.warn ? 'warn' : null, t.s); peek.appendChild(sm);
       var r = b.getBoundingClientRect(), sr = stage.getBoundingClientRect(), sc = sr.width / 1600;
       var x = (r.left - sr.left) / sc, y = (r.bottom - sr.top) / sc;
       peek.style.left = Math.min(x, 1600 - 360) + 'px';
