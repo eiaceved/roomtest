@@ -97,7 +97,7 @@ button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .follow[hidden] { display: none; }
 
 /* Persona */
-.persona-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 30px; }
+.persona-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-top: 30px; }
 .mate { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 26px; position: relative; }
 .mate .dot, .mate-flip .dot { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font: 800 24px var(--display); color: #12131a; margin-bottom: 18px; }
 .mate h3, .mate-flip .h3 { font: 700 30px var(--display); letter-spacing: -0.02em; }
@@ -538,43 +538,48 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   <aside class="notes">Open with the room, not the tech. Tap a cursor or two: "Each colored cursor is a teammate's AI. Tonight we'll show you what happens when they finally share one room." Invite the audience to scan the QR code so they can play the demo on their phones. Set the product name in this panel once the team picks one.</aside>
 </section>
 
-<!-- 2 Persona -->
-<section class="slide" data-title="A typical team">
-  <div class="eyebrow"><i></i>Picture a typical student team</div>
-  <h2 class="h-l">Four students, four AIs, one project.</h2>
+<!-- 2 Persona: our real team -->
+<section class="slide" data-title="Meet the team">
+  <div class="eyebrow"><i></i>Meet the team</div>
+  <h2 class="h-l">Five students. Every AI. One room.</h2>
   <div class="hint" style="margin-top:14px">Tap a teammate to hear their side</div>
   <div class="persona-grid" data-interactive>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Maya: tap to flip">
+    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Sarah: tap to flip">
       <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--maya)">M</span><span class="h3">Maya</span><span class="p">CS major, builds the front end</span><span class="tool" style="color:var(--maya)">Claude Code</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">“Jordan's AI rewrote my homepage. Again.”</span><span class="who">Maya · illustrative</span></span>
+        <span class="face front"><span class="dot" style="background:var(--maya)">S</span><span class="h3">Sarah</span><span class="p">Built VoiceTag</span><span class="tapme">Tap to flip</span></span>
+        <span class="face back"><span class="quote">&ldquo;Ask me about VoiceTag.&rdquo;</span><span class="who">Sarah</span></span>
       </span>
     </button>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Jordan: tap to flip">
+    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Tony: tap to flip">
       <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--jordan)">J</span><span class="h3">Jordan</span><span class="p">Data science, owns the backend</span><span class="tool" style="color:var(--jordan)">ChatGPT Codex</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">“I paste Maya's updates into Codex so it knows what changed.”</span><span class="who">Jordan · illustrative</span></span>
+        <span class="face front"><span class="dot" style="background:var(--jordan)">T</span><span class="h3">Tony</span><span class="p">[Add Tony&rsquo;s one-liner]</span><span class="tapme">Tap to flip</span></span>
+        <span class="face back"><span class="quote">[Ask me about: &hellip;]</span><span class="who">Tony</span></span>
       </span>
     </button>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Sam: tap to flip">
+    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Andrew: tap to flip">
       <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--sam)">S</span><span class="h3">Sam</span><span class="p">First hackathon, learning fast</span><span class="tool" style="color:var(--sam)">Gemini</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">“I don't know what a merge conflict is. I just know I caused one.”</span><span class="who">Sam · illustrative</span></span>
+        <span class="face front"><span class="dot" style="background:var(--sam)">A</span><span class="h3">Andrew</span><span class="p">Building the team room</span><span class="tapme">Tap to flip</span></span>
+        <span class="face back"><span class="quote">&ldquo;Ask me about the room you&rsquo;re watching.&rdquo;</span><span class="who">Andrew</span></span>
       </span>
     </button>
-    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Priya: tap to flip">
+    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Evelyn: tap to flip">
       <span class="inner">
-        <span class="face front"><span class="dot" style="background:var(--priya)">P</span><span class="h3">Priya</span><span class="p">Business major, runs the pitch</span><span class="tool" style="color:var(--priya)">Doesn't code</span><span class="tapme">Tap to flip</span></span>
-        <span class="face back"><span class="quote">“I find out what we built when they demo it to me.”</span><span class="who">Priya · illustrative</span></span>
+        <span class="face front"><span class="dot" style="background:var(--accent)">E</span><span class="h3">Evelyn</span><span class="p">Runs the pitch and research</span><span class="tapme">Tap to flip</span></span>
+        <span class="face back"><span class="quote">&ldquo;Ask me about the research and the numbers.&rdquo;</span><span class="who">Evelyn</span></span>
+      </span>
+    </button>
+    <button type="button" class="flip mate-flip" aria-pressed="false" aria-label="Iris: tap to flip">
+      <span class="inner">
+        <span class="face front"><span class="dot" style="background:var(--priya)">I</span><span class="h3">Iris</span><span class="p">Built AgentMesh</span><span class="tapme">Tap to flip</span></span>
+        <span class="face back"><span class="quote">&ldquo;Ask me about AgentMesh.&rdquo;</span><span class="who">Iris</span></span>
       </span>
     </button>
   </div>
   <div class="pain-need">
-    <div class="pn" data-step="1"><b>Pain</b>Every AI works alone. Teammates paste messages between them, and Priya can't see what's happening at all.</div>
+    <div class="pn" data-step="1"><b>Pain</b>Every AI works alone. Teammates paste messages between them, and someone who doesn't code can't see what's happening at all.</div>
     <div class="pn" data-step="2"><b>Need</b>One place where every teammate, coder or not, sees what each AI is doing before it does it.</div>
   </div>
-  <div class="src">Illustrative team</div>
-  <aside class="notes">Tap one or two teammates to flip their card and read their line, then click the background twice for Pain and Need. The quotes are illustrative: swap in real interview quotes if you get them by Wednesday.</aside>
+  <aside class="notes">Introduce the five of you here, then flip a card or two: each back says what to ask that teammate about. Click the background twice for Pain and Need. Fill in Tony's card before Thursday.</aside>
 </section>
 
 <!-- 3 Stat -->
