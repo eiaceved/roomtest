@@ -83,14 +83,8 @@ h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; letter-
 :root[data-look="paper"] .c-andrew b, :root[data-look="paper"] .c-iris b, :root[data-look="paper"] .c-sarah b, :root[data-look="paper"] .c-tony b { color: #fff; }
 @keyframes driftA { 0%,100% { transform: translate(0,0); } 50% { transform: translate(26px,-14px); } }
 @keyframes driftB { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-22px,16px); } }
-@keyframes driftC { 0%,100% { transform: translate(0,0); } 50% { transform: translate(18px,-24px); } }
-@keyframes driftD { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-32px,-8px); } }
-@keyframes driftE { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,20px); } }
 .drift-a { animation: driftA 7s ease-in-out infinite; }
-.drift-b { animation: driftB 8s ease-in-out infinite; animation-delay: -2.5s; }
-.drift-c { animation: driftC 6.5s ease-in-out infinite; animation-delay: -1.2s; }
-.drift-d { animation: driftD 9.5s ease-in-out infinite; animation-delay: -4s; }
-.drift-e { animation: driftE 7.5s ease-in-out infinite; animation-delay: -6s; }
+.drift-b { animation: driftB 8s ease-in-out infinite; }
 button.cursor { pointer-events: auto; z-index: 3; }
 button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .peek { position: absolute; width: 330px; background: #1e2231; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: 0 20px 40px rgba(0,0,0,.45); font-size: 18px; line-height: 1.45; z-index: 4; }
@@ -294,6 +288,26 @@ button.cursor:hover b { filter: brightness(1.1); transform: translateY(-2px); }
 .coach .why[hidden] { display: none; }
 .coach .nav { margin-top: auto; padding-top: 22px; display: flex; gap: 10px; justify-content: flex-end; }
 
+/* Training mode slide: a live, clickable copy of the mockup inside a browser frame */
+.train { display: grid; grid-template-columns: 330px 1076px; gap: 34px; margin-top: 22px; align-items: start; }
+.train-side { display: flex; flex-direction: column; gap: 22px; }
+.found { background: #fff3b8; color: #1f1c17; border: 1px solid #ecd77a; border-radius: 4px; padding: 18px 20px 20px; box-shadow: 0 10px 22px rgba(0,0,0,.14); transform: rotate(-1.4deg); font-size: 20px; line-height: 1.45; }
+.found .lab { display: block; font: 700 18px/1 var(--mono); color: #c8432b; margin-bottom: 8px; }
+.found b { background: linear-gradient(transparent 55%, rgba(255,216,77,.95) 55%); }
+.so { font: 700 22px/1.2 var(--body); margin: 2px 0 -8px; }
+.train-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.train-list li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; font-size: 20px; line-height: 1.35; }
+.train-list li::before { content: "✓"; font: 700 22px/1.2 var(--body); color: var(--sam); }
+.train-open { align-self: flex-start; text-decoration: none; display: inline-flex; gap: 8px; align-items: center; padding: 12px 18px; font-size: 18px; }
+.tframe { width: 1076px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); box-shadow: 0 20px 44px rgba(0,0,0,.28); }
+.tbar { height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 1px solid var(--line); background: var(--raise); font: 600 14px var(--mono); color: var(--muted); }
+.tbar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); display: inline-block; }
+.tbar .u { margin-left: 10px; }
+.tbar .try { margin-left: auto; color: var(--text); }
+.tview { width: 1076px; height: 610px; overflow: hidden; position: relative; background: #f7f2e8; }
+.tview iframe { position: absolute; left: 0; top: 0; width: 1366px; height: 775px; border: 0; transform: scale(0.7877); transform-origin: 0 0; }
+.tview .tload { position: absolute; inset: 0; display: grid; place-items: center; color: #6e6656; font: 600 18px var(--mono); }
+
 /* Campus hub */
 .hub-top { display: flex; align-items: center; gap: 14px; margin-top: 26px; flex-wrap: wrap; }
 .chip { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 10px 18px; font: 600 17px var(--body); color: var(--muted); }
@@ -436,6 +450,9 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   color: inherit; background: linear-gradient(transparent 56%, rgba(255,216,77,.92) 56%, rgba(255,216,77,.92) 90%, transparent 90%);
   -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 .08em; }
 :root[data-look="paper"] .big.dim { color: #b9ae98; }
+:root[data-look="paper"] .found .lab { font: 700 28px/1 var(--hand); }
+:root[data-look="paper"] .tbar .try { font: 700 24px/1 var(--hand); color: var(--pen); }
+:root[data-look="paper"] .tframe { box-shadow: 0 16px 34px rgba(60,45,20,.16); }
 :root[data-look="paper"] .big.hl { background: none; color: var(--pen); padding: 0; }
 :root[data-look="paper"] .typed .caret { background: var(--pen); }
 :root[data-look="paper"] .tag { border-color: #cfc5b0; }
@@ -559,9 +576,9 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 <section class="slide" data-title="Title">
   <button type="button" class="cursor c-andrew drift-a" style="left:960px; top:130px" data-peek="0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · editing the title</b></button>
   <button type="button" class="cursor c-iris drift-b" style="left:1010px; top:205px" data-peek="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · editing the title</b></button>
-  <button type="button" class="cursor c-sarah drift-c" style="left:1290px; top:120px" data-peek="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Gemini · adding sign-up</b></button>
-  <button type="button" class="cursor c-evelyn drift-d" style="left:1230px; top:300px" data-peek="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · fixing the footer</b></button>
-  <button type="button" class="cursor c-tony drift-e" style="left:1080px; top:390px" data-peek="4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · writing tests</b></button>
+  <button type="button" class="cursor c-sarah drift-b" style="left:1290px; top:120px" data-peek="2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Gemini · adding sign-up</b></button>
+  <button type="button" class="cursor c-evelyn drift-a" style="left:1230px; top:300px" data-peek="3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Claude · fixing the footer</b></button>
+  <button type="button" class="cursor c-tony drift-a" style="left:1080px; top:390px" data-peek="4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l17 8.5-7.2 1.8L9.6 20z"/></svg><b>Codex · writing tests</b></button>
   <div class="title-top">
     <div class="eyebrow"><i></i>Agent workspace · Club showcase</div>
     <h1 class="h-xl"><span class="pname" data-name>[Name]</span></h1>
@@ -741,18 +758,28 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   <aside class="notes">Each click adds a floor to the building. Click any floor to show its details. This is the differentiation slide: features alone aren't unique, the three layers for students are.</aside>
 </section>
 
-<!-- 9 Learn -->
-<section class="slide" data-title="Learn as you build">
+<!-- 9 Training mode -->
+<section class="slide" data-title="Training mode" data-hook="training" style="padding:60px 80px 40px">
   <div class="eyebrow"><i></i>Layer 2 · Learn as you build</div>
-  <h2 class="h-m">Never vibe coded before? Start here.</h2>
-  <div class="learn" data-interactive>
-    <div>
-      <div class="steps-list" id="learn-steps"></div>
-      <div class="learn-bar"><i id="learn-fill"></i></div>
+  <h2 class="h-m">Training mode teaches you as you build.</h2>
+  <div class="train" data-interactive>
+    <div class="train-side">
+      <div class="found"><span class="lab">What we found</span>A first-timer on our team took about <b>22 minutes</b> and <b>15 messages</b> to make her first save. Two GitHub tokens were pasted by accident.</div>
+      <div class="so">So we built training mode:</div>
+      <ul class="train-list">
+        <li>Hover anything to see what it means.</li>
+        <li>A one-minute “Start here” tour.</li>
+        <li>A failed save shows up with a one-click fix.</li>
+        <li>Pasted passwords get blocked.</li>
+      </ul>
+      <a class="btn primary train-open" id="train-open" href="training/index.html?from=deck&amp;slide=9" target="_blank" rel="noopener">Open it full screen ↗</a>
     </div>
-    <div class="coach" id="coach"></div>
+    <div class="tframe">
+      <div class="tbar"><i></i><i></i><i></i><span class="u">mesh · training mode on · prototype</span><span class="try">Hover anything, or press Start here</span></div>
+      <div class="tview"><div class="tload">Loading the room…</div><iframe id="train-iframe" title="Mesh room with training mode on (clickable prototype)" data-src="training/index.html?embed=1"></iframe></div>
+    </div>
   </div>
-  <aside class="notes">Click through as if it's your first day building with AI. On each step, ask the room "what do you think just happened?" before tapping "What just happened?"</aside>
+  <aside class="notes">This is a clickable prototype; you can use it right on the slide. Hover the Changes tab to show a training note, then press "Start here" in the frame for the tour. Paste a fake "ghp_" token into the message box to show it gets blocked. The numbers come from Evelyn's own first night in the room ("Starting From Zero"); if you're comfortable, say it was you. Arrow keys still move the deck. "Open it full screen" opens it in a new tab; close that tab to come back.</aside>
 </section>
 
 <!-- 10 Hub -->
@@ -1003,8 +1030,21 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
     layers: {
       enter: function () {},
       step: function (s) { if (s >= 1 && s <= 3) selectFloor(s - 1); }
+    },
+    training: {
+      enter: function () {
+        var f = $('train-iframe');
+        if (f && !f.getAttribute('src')) f.setAttribute('src', f.dataset.src);
+      }
     }
   };
+  /* Arrow keys pressed inside the training frame still move the deck */
+  window.addEventListener('message', function (e) {
+    var f = $('train-iframe');
+    if (!f || e.source !== f.contentWindow || !e.data || !e.data.meshDeckKey) return;
+    try { f.blur(); window.focus(); } catch (err) {}
+    if (e.data.meshDeckKey === 'ArrowRight' || e.data.meshDeckKey === 'PageDown') next(); else prev();
+  });
   function hook(i, kind, arg) {
     var h = hooks[slides[i].dataset.hook];
     if (h && h[kind]) h[kind](arg);
@@ -1312,7 +1352,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   /* ---------- Three layers: the tower ---------- */
   var floors = [
     { status: 'Being built now', t: 'The team room', items: ['A private room for each project', 'Every AI posts what it is about to change', 'A plain-English feed anyone can follow', 'Nothing goes live until a person approves it'] },
-    { status: 'Mockup', t: 'Learn as you build', items: ['"Never vibe coded before? Start here."', 'Help appears the first time something happens', "Taught on your team's real project, not a separate course"] },
+    { status: 'Clickable prototype', t: 'Learn as you build', items: ['Training mode: hover anything to see what it means', 'A one-minute "Start here" tour on day one', "Taught on your team's real project, not a separate course"] },
     { status: 'Vision', t: 'The campus hub', items: ['Verified students from one school', 'See what other teams are building', 'Ask for help, or join another team', 'Private rooms stay private'] }
   ];
   function selectFloor(k) {
@@ -1326,43 +1366,6 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   each(document.querySelectorAll('.floor'), function (f) { f.addEventListener('click', function () { selectFloor(+f.dataset.floor); }); });
   selectFloor(0);
 
-  /* ---------- Learn as you build ---------- */
-  var learn = [
-    { t: 'Connect your AI', d: 'Pick the AI you already use: Claude, ChatGPT or Gemini. One click adds it to your team room.', ex: 'Connected: your AI joined #landing-page', why: "Your AI can now see what your teammates' AIs are doing, so it won't step on their work." },
-    { t: 'Send your first prompt', d: 'Ask for something small. Your AI posts a note before it changes anything.', ex: 'Add a sign-up button to the home page.', why: 'Teammates see what your AI is about to change, so two AIs never edit the same thing at once.' },
-    { t: 'Read the team feed', d: 'Every update is written in plain English. Switch to Technical anytime to learn the real terms.', ex: "Your AI: I'm adding a sign-up button to the home page.", why: 'Technical view shows the file and branch names, so you pick up the vocabulary as you go.' },
-    { t: 'Open your preview', d: 'Changes land in a preview first. You can click around before anything goes live.', ex: 'Preview ready · waiting for a teammate to approve', why: 'Nothing reaches the live project until a person on your team approves it.' }
-  ];
-  var li = 0;
-  function renderLearn() {
-    var stepsList = $('learn-steps'), coach = $('coach');
-    stepsList.innerHTML = '';
-    learn.forEach(function (s, k) {
-      var b = el('button', 'sl' + (k < li ? ' done' : '')); b.type = 'button';
-      if (k === li) b.setAttribute('aria-current', 'step');
-      b.appendChild(el('span', 'k', k < li ? '✓' : String(k + 1))); b.appendChild(document.createTextNode(s.t));
-      b.addEventListener('click', function () { li = k; renderLearn(); });
-      stepsList.appendChild(b);
-    });
-    $('learn-fill').style.width = ((li + 1) / learn.length * 100) + '%';
-    var s = learn[li];
-    coach.innerHTML = '';
-    coach.appendChild(el('div', 'hello', 'Step ' + (li + 1) + ' of ' + learn.length));
-    coach.appendChild(el('h3', null, s.t));
-    coach.appendChild(el('div', 'do', s.d));
-    coach.appendChild(el('div', 'ex', s.ex));
-    var why = el('div', 'why', 'What just happened: ' + s.why); why.hidden = true;
-    var nav = el('div', 'nav');
-    var reveal = el('button', 'btn', 'What just happened?'); reveal.type = 'button';
-    reveal.addEventListener('click', function () { why.hidden = false; reveal.disabled = true; reveal.style.opacity = '.5'; });
-    var back = el('button', 'btn', 'Back'); back.type = 'button'; back.disabled = li === 0; if (li === 0) back.style.opacity = '.5';
-    back.addEventListener('click', function () { if (li > 0) { li--; renderLearn(); } });
-    var fwd = el('button', 'btn primary', li === learn.length - 1 ? 'Start over' : 'Next step'); fwd.type = 'button';
-    fwd.addEventListener('click', function () { li = li === learn.length - 1 ? 0 : li + 1; renderLearn(); });
-    coach.appendChild(why);
-    nav.appendChild(reveal); nav.appendChild(back); nav.appendChild(fwd); coach.appendChild(nav);
-  }
-  renderLearn();
 
   /* ---------- Campus hub ---------- */
   each(document.querySelectorAll('.chip'), function (chip) {

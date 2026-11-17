@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesh Training Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Matches the pitch deck's notebook look: paper, ink, red pen, yellow highlighter, and each teammate's color. Training notes look like a teacher's margin notes. */
+  --bg: #f7f2e8;
+  --surface: #fffdf8;
+  --line: #e2d9c7;
+  --text: #1f1c17;
+  --muted: #6e6656;
+  --blue: #2f86d6;
+  --amber: #d99a00;
+  --pink: #e0567f;
+  --green: #2a9d66;
+  --red: #c8432b;
+  --coral: #e8613f;
+  --purple: #8a5cf0;
+  --learn: #fff3b8;
+  --learn-line: #ecd77a;
+  --learn-ink: #1f1c17;
+  --hi: #ffd84d;
+  --ink-btn: #1f1c17;
+  --font: "IBM Plex Sans", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); font: 16px/1.5 var(--font); }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+
+/* Header */
+header { display: flex; align-items: center; gap: 14px; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font: 800 24px/1 var(--display); letter-spacing: -0.01em; }
+.brand svg { width: 34px; height: 22px; }
+.roomname { font: 600 14px var(--mono); color: var(--muted); padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.conn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; padding: 6px 12px; border-radius: 999px; background: rgba(200,67,43,.1); color: var(--red); font-weight: 600; }
+.conn i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; display: inline-block; }
+.conn.ok { background: rgba(42,157,102,.12); color: var(--green); }
+.spacer { flex: 1; }
+.backdeck { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; background: var(--learn); border: 1px solid var(--learn-line); color: var(--text); font-weight: 600; font-size: 14px; text-decoration: none; }
+.backdeck[hidden] { display: none; }
+.hbtn { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px; font-weight: 600; font-size: 14px; }
+.hbtn.primary { background: var(--ink-btn); color: var(--surface); border-color: var(--ink-btn); }
+.toggle { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; background: transparent; border: 0; padding: 4px 2px; }
+.toggle .sw { width: 42px; height: 24px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; }
+.toggle .sw::after { content: ""; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.toggle[aria-pressed="true"] .sw { background: var(--red); }
+.toggle[aria-pressed="true"] .sw::after { transform: translateX(18px); }
+
+/* Body layout */
+.main { display: grid; grid-template-columns: 230px minmax(0, 1fr) 320px; min-height: 0; background-image: radial-gradient(circle, #ddd3c0 1.1px, transparent 1.4px); background-size: 28px 28px; }
+aside.side { border-right: 1px solid var(--line); padding: 16px; overflow: auto; background: var(--surface); }
+aside.right { border-left: 1px solid var(--line); border-right: 0; }
+.side h3 { font: 700 24px/1 var(--hand); color: var(--red); margin: 0 0 8px; }
+.side h3 + * { margin-bottom: 18px; }
+.chan { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 6px 10px; border-radius: 8px; color: var(--muted); font-weight: 600; }
+.chan.on { background: var(--bg); color: var(--text); }
+.person { display: flex; align-items: center; gap: 10px; padding: 5px 4px; font-size: 15px; }
+.av { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-weight: 700; font-size: 13px; color: #fff; flex: none; }
+.av.ai { border-radius: 50%; font: 600 11px var(--mono); }
+.person small { color: var(--muted); }
+
+/* Center: tabs */
+.center { display: flex; flex-direction: column; min-height: 0; }
+.tabs { display: flex; gap: 4px; padding: 10px 20px 0; border-bottom: 1px solid var(--line); background: var(--surface); }
+.tab { background: transparent; border: 0; border-bottom: 3px solid transparent; padding: 10px 14px; font-weight: 600; color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--text); }
+.panel { flex: 1; overflow: auto; padding: 20px; display: none; }
+.panel.on { display: block; }
+.msg { display: grid; grid-template-columns: 34px 1fr; gap: 12px; margin-bottom: 16px; }
+.msg .av { width: 34px; height: 34px; }
+.msg .who { font-weight: 600; }
+.msg .who small { font-weight: 400; color: var(--muted); margin-left: 6px; }
+.learnline { display: none; margin-top: 8px; font-size: 14px; color: var(--learn-ink); background: var(--learn); border: 1px solid var(--learn-line); border-radius: 4px; padding: 8px 12px; box-shadow: 0 6px 14px rgba(60,45,20,.08); transform: rotate(-.3deg); }
+.learnline::before { content: "Training note "; font: 700 19px/1 var(--hand); color: var(--red); margin-right: 4px; }
+body.training .learnline { display: block; }
+.welcome { background: var(--surface); border: 1px solid #e6ddca; border-radius: 6px; padding: 22px 22px 18px; margin: 10px 0 22px; position: relative; box-shadow: 0 12px 26px rgba(60,45,20,.10); }
+.welcome::before { content: ""; position: absolute; top: -12px; left: 50%; width: 98px; height: 24px; transform: translateX(-50%) rotate(-3deg); background: rgba(226,214,184,.85); }
+.welcome h2 { margin: 0 0 6px; font: 700 26px/1.15 var(--display); }
+.welcome p { margin: 0 0 12px; color: var(--muted); }
+.starters { display: flex; flex-wrap: wrap; gap: 8px; }
+.starter { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font-size: 14px; font-weight: 600; }
+.starter:hover { background: var(--learn); border-color: var(--learn-line); }
+.composer { border-top: 1px solid var(--line); padding: 12px 20px; background: var(--surface); }
+.composer form { display: flex; gap: 10px; }
+.composer input { flex: 1; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); }
+.send { background: var(--ink-btn); color: var(--surface); border: 0; border-radius: 10px; padding: 0 18px; font-weight: 600; }
+.send:disabled { opacity: .4; cursor: not-allowed; }
+.guard { display: none; margin-top: 10px; background: rgba(200,67,43,.1); color: var(--red); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-weight: 600; }
+.guard.on { display: block; }
+
+/* Changes */
+.save { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.save .file { font: 14px var(--mono); color: var(--muted); }
+.save time { font: 13px var(--mono); color: var(--muted); }
+.save.fail { background: rgba(200,67,43,.07); border-radius: 8px; padding: 14px; border: 1px solid rgba(200,67,43,.35); margin: 10px 0; }
+.save.fail .why { color: var(--red); font-weight: 600; }
+.fixbtn { margin-top: 8px; background: var(--red); color: #fff; border: 0; border-radius: 8px; padding: 7px 12px; font-weight: 600; font-size: 14px; }
+.branchnote { font-size: 14px; color: var(--muted); margin: 0 0 8px; }
+.code { font: 13px var(--mono); background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+
+/* Preview */
+.preview-frame { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); }
+.preview-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.preview-bar .url { font: 13px var(--mono); background: var(--bg); padding: 4px 10px; border-radius: 6px; flex: 1; }
+.preview-body { padding: 36px; background: #f7f2e8; color: var(--text); min-height: 260px; position: relative; overflow: hidden; background-image: radial-gradient(circle, #ddd3c0 1.1px, transparent 1.4px); background-size: 24px 24px; }
+.preview-body h4 { font: 800 58px/1 var(--display); margin: 0 0 10px; display: inline-block; background: linear-gradient(transparent 56%, rgba(255,216,77,.92) 56%, rgba(255,216,77,.92) 90%, transparent 90%); padding: 0 .08em; }
+.preview-body p { margin: 0; color: var(--muted); font-size: 18px; }
+.preview-body svg { position: absolute; left: 0; right: 0; bottom: 20px; width: 100%; height: 110px; }
+.pubrow { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+
+/* Right: checklist and map */
+.check { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.check:last-child { border-bottom: 0; }
+.mark { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; color: #fff; background: var(--red); }
+.check.done .mark { background: var(--green); }
+.check.wait .mark { background: var(--amber); }
+.check b { display: block; font-size: 15px; font-weight: 600; }
+.check span { font-size: 13px; color: var(--muted); }
+.check button { margin-top: 6px; background: var(--ink-btn); color: var(--surface); border: 0; border-radius: 8px; padding: 6px 10px; font-weight: 600; font-size: 13px; }
+.map { display: grid; gap: 10px; }
+.place { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; background: var(--surface); }
+.place b { display: block; font-weight: 600; }
+.place span { font-size: 13px; color: var(--muted); }
+.place.you { border-left: 4px solid var(--blue); }
+.place.room { border-left: 4px solid var(--amber); }
+
+/* Training mode highlights and the explainer card */
+body.training [data-learn] { outline: 1.5px dashed rgba(200,67,43,.45); outline-offset: 3px; border-radius: 6px; cursor: help; }
+body.training [data-learn]:hover { outline-style: solid; outline-color: var(--red); }
+.tip { position: fixed; z-index: 30; width: min(340px, calc(100% - 24px)); background: var(--learn); color: var(--text); border: 1px solid var(--learn-line); border-radius: 4px; padding: 14px 16px 14px; box-shadow: 0 18px 36px rgba(60,45,20,.22); font-size: 15px; pointer-events: none; transform: rotate(-.6deg); }
+.tip[hidden] { display: none; }
+.tip .t { font: 700 28px/1 var(--hand); color: var(--red); }
+.tip .m { margin: 4px 0 0; }
+.tip .h { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--learn-line); color: #4d4637; font-size: 14px; }
+.tip .h b { color: var(--text); background: linear-gradient(transparent 50%, rgba(255,216,77,.95) 50%); padding: 0 3px; }
+
+/* Walkthrough */
+.tour-shade { position: fixed; inset: 0; z-index: 40; pointer-events: none; }
+.tour-shade[hidden] { display: none; }
+.spot { position: fixed; border-radius: 10px; box-shadow: 0 0 0 9999px rgba(31,28,23,.55); outline: 3px solid var(--hi); transition: all .35s ease; z-index: 41; pointer-events: none; }
+.tour-card { position: fixed; z-index: 42; width: min(380px, calc(100% - 24px)); background: var(--surface); border: 1px solid #e6ddca; border-radius: 6px; padding: 20px 22px; box-shadow: 0 24px 50px rgba(0,0,0,.3); }
+.tour-card[hidden] { display: none; }
+.tour-card .step { font: 700 24px/1 var(--hand); color: var(--red); }
+.tour-card h2 { margin: 6px 0 8px; font: 700 24px/1.15 var(--display); }
+.tour-card p { margin: 0; color: var(--muted); }
+.tour-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.tour-nav button { border-radius: 8px; padding: 8px 14px; font-weight: 600; border: 1px solid var(--line); background: transparent; }
+.tour-nav .go { background: var(--ink-btn); color: var(--surface); border-color: var(--ink-btn); }
+
+/* Glossary drawer */
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100%); background: var(--surface); border-left: 1px solid var(--line); z-index: 35; display: flex; flex-direction: column; box-shadow: -20px 0 40px rgba(0,0,0,.12); }
+.drawer[hidden] { display: none; }
+.drawer header { justify-content: space-between; }
+.drawer input { margin: 14px 20px 6px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); }
+.gl { overflow: auto; padding: 6px 20px 20px; }
+.gl dt { font: 700 18px var(--display); margin-top: 16px; }
+.gl dd { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
+.gl dd em { font-style: normal; color: var(--text); }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(16px); background: var(--ink-btn); color: var(--surface); padding: 11px 18px; border-radius: 12px; font-weight: 600; font-size: 15px; opacity: 0; transition: all .25s ease; z-index: 50; pointer-events: none; max-width: calc(100% - 32px); text-align: center; }
+.toast.on { opacity: 1; transform: translateX(-50%); }
+.proto { font: 600 12px var(--mono); color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; padding: 4px 8px; }
+
+@media (max-width: 1100px) { .main { grid-template-columns: 200px minmax(0,1fr); } aside.right { display: none; } }
+@media (max-width: 760px) { .main { grid-template-columns: 1fr; } aside.side:not(.right) { display: none; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body class="training">
+<div class="app">
+  <header id="room-head">
+    <a class="backdeck" id="back-deck" href="../index.html" hidden>← Back to the deck</a>
+    <div class="brand" data-learn="room">
+      <svg viewBox="0 0 34 22" aria-hidden="true"><path d="M1 3 H9 C14 3 15 11 20 11" stroke="#2f6fd6" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M1 11 H20" stroke="#e3a614" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M1 19 H9 C14 19 15 11 20 11" stroke="#e0567f" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M20 11 H33" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+      Mesh
+    </div>
+    <span class="roomname" data-learn="repo">MeshCaseCompetition</span>
+    <span class="conn" id="conn" data-learn="connection"><i></i><span id="conn-text">Your work isn't reaching the team yet</span></span>
+    <span class="proto">Prototype</span>
+    <span class="spacer"></span>
+    <button type="button" class="hbtn" id="open-glossary">Glossary</button>
+    <button type="button" class="hbtn primary" id="start-tour">Start here</button>
+    <button type="button" class="toggle" id="training-toggle" aria-pressed="true"><span class="sw" aria-hidden="true"></span>Training mode</button>
+  </header>
+
+  <div class="main">
+    <aside class="side">
+      <div id="channels">
+        <h3>Channels</h3>
+        <div data-learn="channel">
+          <button type="button" class="chan on">#general</button>
+          <button type="button" class="chan">#pitch</button>
+          <button type="button" class="chan">#decisions</button>
+        </div>
+      </div>
+      <div id="people">
+        <h3>In the room</h3>
+        <div data-learn="agent">
+          <div class="person"><span class="av" style="background:#2f6fd6">A</span>Andrew <small>owner</small></div>
+          <div class="person"><span class="av ai" style="background:#2f6fd6">AI</span>Andrew's agent</div>
+          <div class="person"><span class="av" style="background:#22895a">I</span>Iris</div>
+          <div class="person"><span class="av" style="background:#e8613f">S</span>Sarah</div>
+          <div class="person"><span class="av" style="background:#d99a00">E</span>Evelyn <small>you</small></div>
+          <div class="person"><span class="av" style="background:#8a5cf0">T</span>Tony</div>
+        </div>
+      </div>
+      <button type="button" class="hbtn" style="width:100%" data-learn="invite" id="invite">Invite a teammate</button>
+    </aside>
+
+    <section class="center">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab" role="tab" aria-selected="true" data-tab="chat" id="tab-chat" data-learn="chat">Chat</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="changes" id="tab-changes" data-learn="changes">Changes</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="preview" id="tab-preview" data-learn="preview">Preview</button>
+      </div>
+
+      <div class="panel on" id="panel-chat" role="tabpanel">
+        <div class="welcome" id="starter">
+          <h2>Welcome to MeshCaseCompetition, Evelyn</h2>
+          <p>This is the team's pitch deck project. The live demo and the team slide are still unfinished. Not sure what to ask your agent? Pick one:</p>
+          <div class="starters">
+            <button type="button" class="starter">Show me what's in this project, in plain English</button>
+            <button type="button" class="starter">What's unfinished, and what can I help with?</button>
+            <button type="button" class="starter">Make one small change so I can see how saving works</button>
+          </div>
+        </div>
+        <div class="msg"><span class="av" style="background:#2f6fd6">A</span><div><div class="who">Andrew <small>11:38 PM</small></div>Room's up. Connect your agents with the link I posted, then say hi.</div></div>
+        <div class="msg"><span class="av ai" style="background:#2f6fd6">AI</span><div><div class="who">Andrew's agent <small>11:42 PM</small></div>Saved: updated <span class="code">room/landing.html</span>.<div class="learnline">What happened: Andrew's agent saved its work (a <b>commit</b>) and sent it to GitHub (a <b>push</b>). Now everyone's copy can get it.</div></div></div>
+        <div class="msg"><span class="av" style="background:#22895a">I</span><div><div class="who">Iris <small>11:51 PM</small></div>Can someone check the deck before tomorrow?</div></div>
+        <div class="msg"><span class="av ai" style="background:#d99a00">AI</span><div><div class="who">Evelyn's agent <small>11:58 PM</small></div>I'm about to change <span class="code">pitch/index.html</span>, slide 2 only.<div class="learnline">Why I post this first: teammates' agents see it and won't edit the same slide at the same time.</div></div></div>
+      </div>
+
+      <div class="panel" id="panel-changes" role="tabpanel">
+        <p class="branchnote">Everyone's saves land on the shared draft <span class="code" data-learn="branch">draft</span>. Newest first.</p>
+        <div id="saves">
+          <div class="save fail" id="failed-save"><span class="av" style="background:#d99a00">E</span><div><b>Evelyn's agent</b> <span class="file">pitch/index.html</span><div class="why">Your work didn't reach the team. This computer isn't signed in to GitHub.</div><div class="learnline">Your changes are safe on your computer. They just can't be sent (pushed) until you sign in. Fix it once and every future save goes through.</div><button type="button" class="fixbtn" id="fix-from-save">Fix it: sign in to GitHub</button></div><time>12:02 AM</time></div>
+          <div class="save"><span class="av ai" style="background:#2f6fd6">AI</span><div><b>Andrew's agent</b> <span class="file">room/landing.html</span><div class="learnline">A save (commit) is a snapshot of the files with a name on it. This one is Andrew's.</div></div><time>11:42 PM</time></div>
+          <div class="save"><span class="av ai" style="background:#22895a">AI</span><div><b>Iris's agent</b> <span class="file">README.md</span></div><time>11:20 PM</time></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-preview" role="tabpanel">
+        <div class="preview-frame">
+          <div class="preview-bar"><span data-learn="previewvs">Preview of the shared draft</span><span class="url">mesh · MeshCaseCompetition · draft</span><button type="button" class="hbtn" id="refresh">Refresh</button></div>
+          <div class="preview-body">
+            <h4>Mesh</h4>
+            <p>A team room for coding agents, built for student teams.</p>
+            <svg viewBox="0 0 800 110" preserveAspectRatio="none" aria-hidden="true"><path d="M0 15 H260 C350 15 360 55 450 55" stroke="#2f86d6" stroke-width="4" fill="none"/><path d="M0 55 H450" stroke="#e3a614" stroke-width="4" fill="none"/><path d="M0 95 H260 C350 95 360 55 450 55" stroke="#e0567f" stroke-width="4" fill="none"/><path d="M450 55 H800" stroke="#1f1c17" stroke-width="7"/><circle cx="450" cy="55" r="6" fill="#1f1c17"/></svg>
+          </div>
+        </div>
+        <div class="pubrow"><span data-learn="hosting">Public site: <span class="code">roomtest-six.vercel.app</span></span><span>Updates when the owner publishes (deploys).</span></div>
+      </div>
+
+      <div class="composer" data-learn="composer">
+        <form id="composer">
+          <label for="msg-input" class="sr" style="position:absolute; left:-9999px">Message the team</label>
+          <input id="msg-input" type="text" placeholder="Message #general (try pasting something that starts with ghp_)" autocomplete="off">
+          <button type="submit" class="send" id="send">Send</button>
+        </form>
+        <div class="guard" id="guard">That looks like a password or token. It wasn't sent. If you pasted a real one anywhere, delete it on GitHub and make a new one.</div>
+      </div>
+    </section>
+
+    <aside class="side right">
+      <div id="checklist">
+        <h3>Setup checklist</h3>
+        <div data-learn="checklist">
+          <div class="check done" id="ck-git"><span class="mark">✓</span><div><b>Git is installed</b><span>The tool that saves versions of your files.</span></div></div>
+          <div class="check" id="ck-name"><span class="mark">!</span><div><b>Your name is on your saves</b><span>Saves need a name and email, or they fail.</span><br><button type="button" data-fix="name">Fix it</button></div></div>
+          <div class="check" id="ck-github"><span class="mark">!</span><div><b>Signed in to GitHub</b><span>Needed to send your saves to the team.</span><br><button type="button" data-fix="github">Sign in with GitHub</button></div></div>
+          <div class="check" id="ck-access"><span class="mark">!</span><div><b>Allowed to edit this project</b><span>The owner adds you as a collaborator.</span><br><button type="button" data-fix="access">Ask Andrew</button></div></div>
+          <div class="check done" id="ck-host"><span class="mark">✓</span><div><b>Hosting connected</b><span>Done by the owner, once.</span></div></div>
+        </div>
+      </div>
+      <div id="map" style="margin-top:18px">
+        <h3>Where to do what</h3>
+        <div class="map" data-learn="places">
+          <div class="place you"><b>Your Claude chat</b><span>Ask your own agent for changes and "what does this mean?" Never paste passwords here.</span></div>
+          <div class="place room"><b>This room</b><span>See who saved what, preview the work, and talk to teammates.</span></div>
+          <div class="place"><b>The Terminal</b><span>Rarely needed. Typing a password there shows nothing; that's normal.</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="tip" id="tip" hidden role="tooltip"></div>
+<div class="tour-shade" id="tour-shade" hidden><div class="spot" id="spot"></div></div>
+<div class="tour-card" id="tour-card" hidden role="dialog" aria-labelledby="tour-title">
+  <div class="step" id="tour-step"></div>
+  <h2 id="tour-title"></h2>
+  <p id="tour-body"></p>
+  <div class="tour-nav"><button type="button" id="tour-skip">Skip</button><button type="button" id="tour-back">Back</button><button type="button" class="go" id="tour-next">Next</button></div>
+</div>
+<div class="drawer" id="glossary" hidden>
+  <header><b>Glossary</b><button type="button" class="hbtn" id="close-glossary">Close</button></header>
+  <input id="gl-search" type="search" placeholder="Search a word, like push or token" aria-label="Search the glossary">
+  <dl class="gl" id="gl-list"></dl>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+  var toastT;
+  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('on'); }, 2600); }
+
+  /* Plain-language explanations, from the "Starting From Zero" diagnostic */
+  var LEARN = {
+    room: { t: 'The room', m: "Your team's shared space: messages, every agent's saves, and a preview of the work.", h: 'Start with <b>Start here</b> for a one-minute tour.' },
+    repo: { t: 'Repo (repository)', m: "The project's online home on GitHub, plus its full history. Everyone's copy syncs with it.", h: 'This room is connected to the repo named here.' },
+    connection: { t: 'Connection status', m: 'Shows whether your agent is connected and when your work last reached the team.', h: 'Red means your saves are only on your computer. Use the <b>Setup checklist</b> to fix it.' },
+    channel: { t: 'Channels', m: 'Topics for talking with your teammates, like group chats.', h: 'Ask questions in <b>#general</b>.' },
+    agent: { t: 'Agent', m: 'An AI, like Claude, that can read and change the project files and run commands for you.', h: "Each person's agent posts here when it starts and finishes work." },
+    invite: { t: 'Invite a teammate', m: 'Adds someone to the room. To change files, the repo owner must also add them on GitHub as a collaborator.', h: 'Only the owner can grant edit access.' },
+    chat: { t: 'Chat', m: 'Where teammates and their agents talk and post updates.', h: 'Agents post what they are about to change, so nobody collides.' },
+    changes: { t: 'Changes', m: 'Every save (commit) from every agent, with a name on it.', h: 'If a save failed, it shows here in red with a fix.' },
+    preview: { t: 'Preview', m: 'A test view of the latest shared draft. Check your work here.', h: 'No hosting company needed to see it.' },
+    branch: { t: 'Branch / draft', m: "A separate line of work in a repo. Mesh puts everyone's saves on one shared branch called draft.", h: 'The public site only changes when the owner publishes.' },
+    previewvs: { t: 'Preview vs public site', m: 'A preview is a test view for checking work. The public site is what everyone else sees.', h: 'Use the preview freely. It never goes public by itself.' },
+    hosting: { t: 'Hosting and deploy', m: 'A hosting company (here, Vercel) puts files online at a link. Deploying uploads a new version to it.', h: 'The owner connects hosting once.' },
+    composer: { t: 'Message box', m: 'Messages here go to the room, and the room is shared with your team.', h: 'Never paste passwords, tokens or keys. Mesh blocks text that looks like one.' },
+    checklist: { t: 'Setup checklist', m: 'Mesh checks your computer before you start, so saves never fail silently.', h: 'Every red item has a one-click fix. No Terminal needed.' },
+    places: { t: 'Three places, three jobs', m: 'Your Claude chat is for you and your agent. This room is for the team. The Terminal is your computer, directly.', h: "When in doubt, ask your Claude chat: 'what does this mean?'" }
+  };
+  var GLOSSARY = [
+    ['Terminal', 'A window where you type commands to your computer instead of clicking. Your agent uses one behind the scenes.'],
+    ['Folder / project', 'The files that make up your work, on your own computer.'],
+    ['Repo (repository)', "The project's online home on GitHub, plus its full history. Everyone's copy syncs with it."],
+    ['GitHub', 'The website that stores repos and controls who may change them.'],
+    ['Git', 'The tool that records versions of files and syncs them with GitHub.'],
+    ['Branch / draft', 'A separate line of work in a repo. Mesh puts everyone on one shared branch called draft.'],
+    ['Save (commit)', 'A recorded snapshot of changes, with your name on it.'],
+    ['Push', 'Sending your saved snapshots from your computer up to GitHub.'],
+    ['Owner / collaborator', "The owner controls the repo. Collaborators are invited and can push, but can't change its settings."],
+    ['Password, token, key', 'Secrets that prove who you are. A token or API key is a long generated password for a tool. Never paste one into a chat.'],
+    ['Agent', 'An AI, like Claude, that can read and change your project files and run commands for you.'],
+    ['Claude tokens (usage)', 'A different meaning of token: how much AI usage you have left. Not a password.'],
+    ['Hooks', 'Small scripts that run automatically at set moments, like when your agent finishes a turn. They keep the room in sync.'],
+    ['Hosting', 'A company, like Vercel, that puts your files online at a web link.'],
+    ['Deploy', 'Uploading a version of the project to the hosting company.'],
+    ['Preview vs public site', 'A preview is a test link for checking work. The public site is what everyone sees.'],
+    ['localhost', 'A web address that only works on your own computer.']
+  ];
+
+  /* Training mode toggle */
+  var training = true;
+  $('training-toggle').addEventListener('click', function () {
+    training = !training;
+    this.setAttribute('aria-pressed', String(training));
+    document.body.classList.toggle('training', training);
+    if (!training) $('tip').hidden = true;
+    toast(training ? 'Training mode on: point at anything outlined to learn what it is.' : 'Training mode off.');
+  });
+
+  /* Explainer card on hover or tap */
+  var tip = $('tip');
+  function showTip(target, x, y) {
+    var d = LEARN[target.dataset.learn]; if (!d) return;
+    tip.innerHTML = '<div class="t"></div><p class="m"></p><div class="h"></div>';
+    tip.querySelector('.t').textContent = d.t;
+    tip.querySelector('.m').textContent = d.m;
+    tip.querySelector('.h').innerHTML = d.h;
+    tip.hidden = false;
+    var r = target.getBoundingClientRect();
+    var left = Math.min(Math.max(12, r.left), window.innerWidth - tip.offsetWidth - 12);
+    var top = r.bottom + 10;
+    if (top + tip.offsetHeight > window.innerHeight - 12) top = Math.max(12, r.top - tip.offsetHeight - 10);
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  document.addEventListener('mouseover', function (e) {
+    if (!training || !$('tour-card').hidden) return;
+    var t = e.target.closest('[data-learn]');
+    if (t) showTip(t); else tip.hidden = true;
+  });
+  document.addEventListener('focusin', function (e) {
+    if (!training) return;
+    var t = e.target.closest('[data-learn]'); if (t) showTip(t);
+  });
+  document.addEventListener('touchstart', function (e) {
+    if (!training) return;
+    var t = e.target.closest('[data-learn]'); if (t) showTip(t); else tip.hidden = true;
+  }, { passive: true });
+
+  /* Tabs */
+  each(document.querySelectorAll('.tab'), function (tab) {
+    tab.addEventListener('click', function () { selectTab(tab.dataset.tab); });
+  });
+  function selectTab(name) {
+    each(document.querySelectorAll('.tab'), function (t) { t.setAttribute('aria-selected', String(t.dataset.tab === name)); });
+    each(document.querySelectorAll('.panel'), function (p) { p.classList.toggle('on', p.id === 'panel-' + name); });
+  }
+
+  /* Starter requests go to your own Claude chat */
+  each(document.querySelectorAll('.starter'), function (b) {
+    b.addEventListener('click', function () {
+      var text = b.textContent;
+      try { navigator.clipboard.writeText(text).catch(function () {}); } catch (err) {}
+      toast('Copied. Paste it into your own Claude chat, not this room.');
+    });
+  });
+
+  /* Setup checklist with one-click fixes */
+  var state = { name: false, github: false, access: false };
+  function markDone(id, label) {
+    var c = $(id); c.classList.remove('wait'); c.classList.add('done');
+    c.querySelector('.mark').textContent = '✓';
+    var b = c.querySelector('button'); if (b) b.remove();
+    if (label) c.querySelector(':scope > div > span').textContent = label;
+  }
+  function updateConn() {
+    var ok = state.name && state.github;
+    var c = $('conn'); c.classList.toggle('ok', ok);
+    $('conn-text').textContent = ok ? 'Connected as evelyn · saving to the team' : "Your work isn't reaching the team yet";
+    if (ok) {
+      var f = $('failed-save');
+      if (f) {
+        f.outerHTML = '<div class="save"><span class="av" style="background:#d99a00">E</span><div><b>Evelyn\'s agent</b> <span class="file">pitch/index.html</span><div class="learnline">Sent! Your save reached GitHub (a push), so teammates see it in their copy.</div></div><time>just now</time></div>';
+        toast('Your earlier save just reached the team.');
+      }
+    }
+  }
+  function fix(kind) {
+    if (kind === 'name') { state.name = true; markDone('ck-name', 'Set to Evelyn. Your saves now carry your name.'); toast('Name and email set. No Terminal needed.'); }
+    if (kind === 'github') { state.github = true; markDone('ck-github', 'Signed in through your browser. No token to copy or paste.'); toast('Signed in to GitHub through your browser.'); }
+    if (kind === 'access') {
+      state.access = true; var c = $('ck-access'); c.classList.add('wait'); c.querySelector('.mark').textContent = '…';
+      var b = c.querySelector('button'); if (b) b.remove();
+      c.querySelector(':scope > div > span').textContent = 'Request sent to Andrew. Only the owner can approve this.';
+      toast('Asked Andrew for edit access.');
+    }
+    updateConn();
+  }
+  each(document.querySelectorAll('[data-fix]'), function (b) { b.addEventListener('click', function () { fix(b.dataset.fix); }); });
+  $('fix-from-save').addEventListener('click', function () { if (!state.name) fix('name'); fix('github'); });
+  $('invite').addEventListener('click', function () { toast('Invite link copied. The owner also adds them on GitHub.'); });
+  $('refresh').addEventListener('click', function () { toast('Preview is showing the latest shared draft.'); });
+
+  /* Secret guard */
+  var SECRET = /(ghp_|gho_|github_pat_|as_|sk-|xox[bp]-)[A-Za-z0-9_\-]{6,}/;
+  var input = $('msg-input');
+  input.addEventListener('input', function () {
+    var bad = SECRET.test(input.value);
+    $('guard').classList.toggle('on', bad);
+    $('send').disabled = bad;
+  });
+  $('composer').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (SECRET.test(input.value) || !input.value.trim()) return;
+    var msg = document.createElement('div'); msg.className = 'msg';
+    msg.innerHTML = '<span class="av" style="background:#d99a00">E</span><div><div class="who">Evelyn <small>now</small></div><span></span></div>';
+    msg.querySelector('div span:last-child').textContent = input.value;
+    selectTab('chat');
+    $('panel-chat').appendChild(msg); input.value = '';
+    $('panel-chat').scrollTop = $('panel-chat').scrollHeight;
+  });
+
+  /* Glossary */
+  function renderGlossary(q) {
+    var dl = $('gl-list'); dl.innerHTML = '';
+    GLOSSARY.filter(function (g) { return !q || (g[0] + ' ' + g[1]).toLowerCase().indexOf(q.toLowerCase()) > -1; })
+      .forEach(function (g) { var dt = document.createElement('dt'); dt.textContent = g[0]; var dd = document.createElement('dd'); dd.textContent = g[1]; dl.appendChild(dt); dl.appendChild(dd); });
+    if (!dl.children.length) { var dd = document.createElement('dd'); dd.textContent = 'No match. Ask your Claude chat: "what does this mean?"'; dl.appendChild(dd); }
+  }
+  $('open-glossary').addEventListener('click', function () { $('glossary').hidden = false; renderGlossary(''); $('gl-search').focus(); });
+  $('close-glossary').addEventListener('click', function () { $('glossary').hidden = true; });
+  $('gl-search').addEventListener('input', function () { renderGlossary(this.value); });
+
+  /* Start here: a guided tour */
+  var TOUR = [
+    { sel: '#room-head', tab: 'chat', t: 'Welcome to your team room', b: "This is where your teammates and each teammate's AI agent build one project together. Here's a one-minute tour." },
+    { sel: '#conn', tab: 'chat', t: 'Are you connected?', b: 'This line tells you whether your work is reaching the team, and when it last did. Red means your saves are only on your computer.' },
+    { sel: '#checklist', tab: 'chat', t: 'Fix setup in one click', b: 'Mesh checks your computer first: your name on saves, a GitHub sign-in, edit access. Every red item has a button. No Terminal, no tokens.' },
+    { sel: '#tab-changes', tab: 'changes', t: 'Changes: who saved what', b: "When an agent finishes, the work is saved and sent to the team. If a save fails, it shows up in red with the reason. It never fails silently." },
+    { sel: '#tab-preview', tab: 'preview', t: 'Preview: see the work', b: 'The latest shared draft, right here. The public site only changes when the owner publishes.' },
+    { sel: '#channels', tab: 'chat', t: 'Talk to your team', b: 'Channels are group chats for the project. Agents post here too, before they change anything.' },
+    { sel: '#map', tab: 'chat', t: 'Three places, three jobs', b: 'Your Claude chat is for asking your own agent. This room is for the team. The Terminal is rarely needed.' },
+    { sel: '#starter', tab: 'chat', t: 'Try your first change', b: 'Pick a starter request and paste it into your own Claude chat. Watch your save appear in Changes with your name on it.' }
+  ];
+  var ti = 0;
+  function placeTour() {
+    var s = TOUR[ti];
+    selectTab(s.tab);
+    var el = document.querySelector(s.sel);
+    var r = el.getBoundingClientRect();
+    var spot = $('spot'), pad = 6;
+    spot.style.left = (r.left - pad) + 'px'; spot.style.top = (r.top - pad) + 'px';
+    spot.style.width = (r.width + pad * 2) + 'px'; spot.style.height = (r.height + pad * 2) + 'px';
+    $('tour-step').textContent = 'Step ' + (ti + 1) + ' of ' + TOUR.length;
+    $('tour-title').textContent = s.t; $('tour-body').textContent = s.b;
+    $('tour-back').disabled = ti === 0;
+    $('tour-next').textContent = ti === TOUR.length - 1 ? 'Done' : 'Next';
+    var card = $('tour-card'); card.hidden = false;
+    var cw = card.offsetWidth, ch = card.offsetHeight;
+    var left = r.right + 18, top = r.top;
+    if (left + cw > window.innerWidth - 12) left = r.left - cw - 18;
+    if (left < 12) { left = Math.min(Math.max(12, r.left), window.innerWidth - cw - 12); top = r.bottom + 18; }
+    if (top + ch > window.innerHeight - 12) top = Math.max(12, window.innerHeight - ch - 12);
+    card.style.left = left + 'px'; card.style.top = top + 'px';
+  }
+  function startTour() { ti = 0; tip.hidden = true; $('tour-shade').hidden = false; placeTour(); $('tour-next').focus(); }
+  function endTour() { $('tour-shade').hidden = true; $('tour-card').hidden = true; selectTab('chat'); }
+  $('start-tour').addEventListener('click', startTour);
+  $('tour-next').addEventListener('click', function () { if (ti < TOUR.length - 1) { ti++; placeTour(); } else endTour(); });
+  $('tour-back').addEventListener('click', function () { if (ti > 0) { ti--; placeTour(); } });
+  $('tour-skip').addEventListener('click', endTour);
+  window.addEventListener('resize', function () { if (!$('tour-card').hidden) placeTour(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { endTour(); $('glossary').hidden = true; tip.hidden = true; }
+    if ($('tour-card').hidden) return;
+    if (e.key === 'ArrowRight') $('tour-next').click();
+    if (e.key === 'ArrowLeft') $('tour-back').click();
+  });
+
+  /* Opened from the pitch deck: in-slide frame (?embed=1) or full screen (?from=deck) */
+  var params = new URLSearchParams(location.search);
+  var EMBED = params.get('embed') === '1';
+  if (params.get('from') === 'deck') {
+    var bd = $('back-deck'); bd.hidden = false;
+    bd.href = '../index.html#slide-' + (parseInt(params.get('slide'), 10) || 1);
+  }
+  /* Inside the deck's frame, arrow keys still move the slides */
+  if (EMBED) document.addEventListener('keydown', function (e) {
+    if (!$('tour-card').hidden || !$('glossary').hidden) return;
+    if (e.target.closest && e.target.closest('input, textarea')) return;
+    if (['ArrowRight', 'ArrowLeft', 'PageDown', 'PageUp'].indexOf(e.key) < 0) return;
+    e.preventDefault();
+    try { parent.postMessage({ meshDeckKey: e.key }, '*'); } catch (err) {}
+  });
+
+  /* First visit opens the tour (not inside the deck's frame, where the presenter starts it) */
+  if (!EMBED) {
+    var seen = false;
+    try { seen = localStorage.getItem('mesh-tour-seen') === '1'; localStorage.setItem('mesh-tour-seen', '1'); } catch (err) {}
+    if (!seen) setTimeout(startTour, 500);
+  }
+})();
+</script>
+</body>
+</html>
