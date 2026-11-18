@@ -355,6 +355,15 @@ table.gridt { width: 100%; border-collapse: collapse; margin-top: 24px; font-siz
 .road .fill { position: absolute; left: 0; top: 34px; height: 3px; background: var(--accent); width: 4%; transition: width .8s ease; }
 [data-at="1"] .road .fill { width: 38%; }
 [data-at="2"] .road .fill { width: 72%; }
+/* How it works: four-step version of the road */
+.road.road-4 { grid-template-columns: repeat(4, 1fr); margin-top: 70px; }
+.road-4 .stop { padding-right: 30px; }
+.road-4 .stop h3 { font-size: 36px; }
+.road-4 .stop p { font-size: 22px; max-width: 360px; }
+[data-at="1"] .road-4 .fill { width: 29%; }
+[data-at="2"] .road-4 .fill { width: 54%; }
+[data-at="3"] .road-4 .fill, [data-at="4"] .road-4 .fill { width: 79%; }
+.how-line { margin-top: 70px; font: 700 54px/1.1 var(--display); }
 .stop { position: relative; padding-right: 40px; }
 .stop .pin { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--accent); background: var(--ink); display: grid; place-items: center; font: 800 28px var(--display); color: var(--accent); position: relative; }
 .stop .when { margin-top: 26px; font: 600 16px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
@@ -449,6 +458,8 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
 :root[data-look="paper"] .hl, :root[data-look="paper"] .pname, :root[data-look="paper"] .story span, :root[data-look="paper"] .close-lines span {
   color: inherit; background: linear-gradient(transparent 56%, rgba(255,216,77,.92) 56%, rgba(255,216,77,.92) 90%, transparent 90%);
   -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 .08em; }
+/* Opening slide title: red and bold in every look. */
+.title-top .h-xl, .title-top .h-xl .pname, :root[data-look] .title-top .h-xl .pname { color: #E5322D; font-weight: 900; }
 :root[data-look="paper"] .big.dim { color: #b9ae98; }
 :root[data-look="paper"] .found .lab { font: 700 28px/1 var(--hand); }
 :root[data-look="paper"] .tbar .try { font: 700 24px/1 var(--hand); color: var(--pen); }
@@ -694,10 +705,25 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   <div class="intro">Introducing</div>
   <h1 class="h-xl"><span class="pname" data-name>[Name]</span></h1>
   <p class="lede" style="margin-top:22px">One room for your team and every AI on it.</p>
-  <aside class="notes">Say the name, then go straight to the live room.</aside>
+  <aside class="notes">Say the name, then give the four-step picture on the next slide.</aside>
 </section>
 
-<!-- 7 Three layers -->
+<!-- 6b How it works -->
+<section class="slide" data-title="How it works">
+  <div class="eyebrow"><i></i>How it works</div>
+  <h2 class="h-m">A normal day in the room, in four steps.</h2>
+  <div class="road road-4">
+    <div class="fill"></div>
+    <div class="stop"><div class="pin">1</div><div class="when">You</div><h3>Ask your AI</h3><p>Say what you want in plain English, on your own schedule. Your work saves to the team's shared draft by itself.</p></div>
+    <div class="stop" data-step="1"><div class="pin">2</div><div class="when">The AIs</div><h3>AIs talk to each other</h3><p>Need something from a teammate's part? Your AI asks theirs, even while they're offline. Nobody plays messenger.</p></div>
+    <div class="stop" data-step="2"><div class="pin">3</div><div class="when">A person</div><h3>The right person approves</h3><p>Anything that changes someone's work waits for their OK. No AI acts behind a teammate's back.</p></div>
+    <div class="stop" data-step="3"><div class="pin">4</div><div class="when">The team</div><h3>Publish when ready</h3><p>Everyone sees the draft live. When the team agrees, one click makes it real.</p></div>
+  </div>
+  <p class="how-line" data-step="4"><span class="hl">AIs coordinate.</span> People approve.</p>
+  <aside class="notes">Click once per step. "Here's a normal day in the room. One: you tell your AI what you want, in plain English, whenever you have time, and it saves to the team's shared draft. Two: if it needs something from a teammate's part, it asks their AI directly, so nobody has to play messenger. Three: anything that changes someone's work waits for that person's OK. Four: everyone sees the draft live, and when the team is ready, one click publishes it." Last click: "AIs coordinate. People approve." About 30 seconds.</aside>
+</section>
+
+<!-- 8 Three layers -->
 <section class="slide" data-title="Three layers" data-hook="layers">
   <div class="eyebrow"><i></i>What makes it different</div>
   <h2 class="h-m">Three layers, built for students.</h2>
@@ -713,7 +739,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   <aside class="notes">Each click adds a floor to the building. Click any floor to show its details. This is the differentiation slide: features alone aren't unique, the three layers for students are.</aside>
 </section>
 
-<!-- 8 Demo -->
+<!-- 7 Demo -->
 <section class="slide" data-title="Live: the team room" style="padding-top:60px">
   <div style="display:flex; align-items:center; gap:16px">
     <div class="eyebrow" style="margin:0"><i></i>Inside the team room</div>
@@ -772,7 +798,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
         <li>A failed save shows up with a one-click fix.</li>
         <li>Pasted passwords get blocked.</li>
       </ul>
-      <a class="btn primary train-open" id="train-open" href="training/index.html?from=deck&amp;slide=9" target="_blank" rel="noopener">Open it full screen ↗</a>
+      <a class="btn primary train-open" id="train-open" href="training/index.html?from=deck&amp;slide=10" target="_blank" rel="noopener">Open it full screen ↗</a>
     </div>
     <div class="tframe">
       <div class="tbar"><i></i><i></i><i></i><span class="u">mesh · training mode on · prototype</span><span class="try">Hover anything, or press Start here</span></div>
@@ -953,7 +979,7 @@ table.apx { width: 100%; border-collapse: collapse; margin-top: 24px; font-size:
   /* Our real team. Fill in majors, one line about each person, and photo paths (photos go in a "team" folder next to this file). */
   var TEAM = [
     { name: 'Andrew', role: 'Builds the team room app', major: '[Major]', about: '[One line about you]', photo: 'team/andrew.jpg', color: '#2f86d6' },
-    { name: 'Iris', role: 'Built AgentMesh, shared code knowledge', major: '[Major]', about: '[One line about you]', photo: 'team/iris.jpg', color: '#2a9d66' },
+    { name: 'Iris Liu', role: 'Built AgentMesh, shared code knowledge', major: '[Major]', about: '[One line about you]', photo: 'team/iris.jpg', color: '#2a9d66' },
     { name: 'Sarah', role: '[Role on this project]', major: '[Major]', about: '[One line about you]', photo: 'team/sarah.jpg', color: '#e8613f' },
     { name: 'Evelyn', role: 'Leads the pitch and research', major: '[Major]', about: '[One line about you]', photo: 'team/evelyn.jpg', color: '#d99a00' },
     { name: 'Tony', role: '[Role on this project]', major: '[Major]', about: '[One line about you]', photo: 'team/tony.jpg', color: '#8a5cf0' }
